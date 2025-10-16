@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class EmptyView extends StatelessWidget {
-  final String? title;
-
+  /// [TODO가 없을때 보여주는 위젯]
   EmptyView(this.title);
+
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +13,10 @@ class EmptyView extends StatelessWidget {
       margin: EdgeInsets.all(20),
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
       ),
+
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -33,10 +35,7 @@ class EmptyView extends StatelessWidget {
           Text(
             '할 일을 추가하고 $title에서\n할 일을 추적하세요',
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 14,
-              height: 1.5, // 줄간격
-            ),
+            style: const TextStyle(fontSize: 14, height: 1.5),
           ),
         ],
       ),
