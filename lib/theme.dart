@@ -5,6 +5,10 @@ final lightTheme = ThemeData(
     seedColor: Colors.pinkAccent,
     brightness: Brightness.light,
   ),
+  appBarTheme: AppBarTheme(
+    backgroundColor: Colors.grey.shade300,
+    centerTitle: true,
+  ),
 );
 final darkTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
