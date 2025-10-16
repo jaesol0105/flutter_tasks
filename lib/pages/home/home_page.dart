@@ -1,32 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:tasks/models/to_do_entity.dart';
+import 'package:tasks/pages/home/widgets/add_to_do_bottom_sheet.dart';
 import 'package:tasks/pages/home/widgets/empty_view.dart';
 import 'package:tasks/pages/home/widgets/to_do_list_view.dart';
 
-class HomePage extends StatelessWidget {
-  final textController = TextEditingController();
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final title = "재솔's Tasks";
   List<ToDoEntity> todoList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade400,
       appBar: AppBar(
         title: Text(
           title,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
+
       body: todoList.isEmpty ? EmptyView(title) : ToDoListView(),
+
+      // [FAB - 새 TODO 추가]
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // 추가
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return AddToDoBottomSheet(saveToDo);
+            },
+          );
         },
         backgroundColor: Colors.red,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, size: 24),
       ),
     );
+  }
+
+  /// [새 TODO 추가]
+  void saveToDo(
+    String title,
+    String? description,
+    bool isFavorite,
+    bool isDone,
+  ) {
+    setState(() {
+      todoList.add(ToDoEntity(title, description, isFavorite, isDone));
+      print(todoList);
+    });
   }
 }
