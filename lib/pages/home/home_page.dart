@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tasks/models/to_do_entity.dart';
-import 'package:tasks/pages/home/widgets/add_to_do_bottom_sheet.dart';
+import 'package:tasks/pages/home/widgets/add_to_do_bottom_sheet_view.dart';
 import 'package:tasks/pages/home/widgets/empty_view.dart';
 import 'package:tasks/pages/home/widgets/to_do_list_view.dart';
 
@@ -23,7 +23,14 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
 
-      body: todoList.isEmpty ? EmptyView(title) : ToDoListView(),
+      body: todoList.isEmpty
+          ? EmptyView(title)
+          : ToDoListView(
+              key: UniqueKey(),
+              toDoList: todoList,
+              onToggleDone: toggleDone,
+              onToggleFavorite: toggleFavorite,
+            ),
 
       // [FAB - 새 TODO 추가]
       floatingActionButton: FloatingActionButton(
@@ -32,7 +39,7 @@ class _HomePageState extends State<HomePage> {
             context: context,
             isScrollControlled: true,
             builder: (context) {
-              return AddToDoBottomSheet(saveToDo);
+              return AddToDoBottomSheetView(saveToDo);
             },
           );
         },
@@ -53,6 +60,18 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       todoList.add(ToDoEntity(title, description, isFavorite, isDone));
       print(todoList);
+    });
+  }
+
+  void toggleFavorite(int index) {
+    setState(() {
+      todoList[index].isFavorite = !todoList[index].isFavorite;
+    });
+  }
+
+  void toggleDone(int index) {
+    setState(() {
+      todoList[index].isDone = !todoList[index].isDone;
     });
   }
 }
