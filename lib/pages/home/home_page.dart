@@ -5,26 +5,27 @@ import 'package:tasks/pages/home/widgets/to_do_list_view.dart';
 
 class HomePage extends StatelessWidget {
   final textController = TextEditingController();
+  final title = "재솔's Tasks";
   List<ToDoEntity> todoList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade400,
       appBar: AppBar(
         title: Text(
-          "재솔's Tasks",
+          title,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        centerTitle: true,
       ),
-      body: todoList.isEmpty ? EmptyView() : ToDoListView(),
+      body: todoList.isEmpty ? EmptyView(title) : ToDoListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // 추가
         },
         backgroundColor: Colors.red,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, size: 24),
       ),
     );
   }

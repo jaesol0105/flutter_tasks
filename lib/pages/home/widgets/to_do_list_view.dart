@@ -5,6 +5,4 @@ class ToDoListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text("To-Do List View");
   }
-
-  // Implementation of ToDoListView
 }
