@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class AddToDoBottomSheet extends StatefulWidget {
+class AddToDoBottomSheetView extends StatefulWidget {
   /// [새 TODO를 추가하는 바텀 시트]
-  AddToDoBottomSheet(this.onSave);
+  AddToDoBottomSheetView(this.onSave);
 
   /// [TODO 저장 : 콜백 메소드]
   final void Function(
@@ -14,10 +14,10 @@ class AddToDoBottomSheet extends StatefulWidget {
   onSave;
 
   @override
-  State<AddToDoBottomSheet> createState() => _AddToDoBottomSheetState();
+  State<AddToDoBottomSheetView> createState() => _AddToDoBottomSheetState();
 }
 
-class _AddToDoBottomSheetState extends State<AddToDoBottomSheet> {
+class _AddToDoBottomSheetState extends State<AddToDoBottomSheetView> {
   final titleController = TextEditingController();
   final detailController = TextEditingController();
 
