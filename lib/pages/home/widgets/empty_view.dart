@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EmptyView extends StatelessWidget {
-  /// [TODO가 없을때 보여주는 위젯]
-  EmptyView(this.title);
+  /// [TODO 없을때 보여주는 뷰]
+  const EmptyView({super.key, required this.title});
 
   final String? title;
 
@@ -25,6 +25,7 @@ class EmptyView extends StatelessWidget {
             width: 100,
             height: 100,
             fit: BoxFit.cover,
+            color: Theme.of(context).dividerColor,
           ),
           SizedBox(height: 12),
           Text(
