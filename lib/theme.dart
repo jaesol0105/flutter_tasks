@@ -16,14 +16,15 @@ final lightTheme = ThemeData(
 
 final darkTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.pinkAccent,
+    seedColor: Colors.white,
     brightness: Brightness.dark,
-    surface: Color(0xFF121212),
+    surface: Colors.grey.shade900,
   ),
   appBarTheme: AppBarTheme(
-    backgroundColor: Color(0xFF121212),
+    backgroundColor: Colors.grey.shade900,
     centerTitle: true,
   ),
-  scaffoldBackgroundColor: Color(0xFF1A1A1A),
+  scaffoldBackgroundColor: Color(0xFF121212),
+  //scaffoldBackgroundColor: Color(0xFF1A1A1A),
   dividerColor: Colors.white,
 );

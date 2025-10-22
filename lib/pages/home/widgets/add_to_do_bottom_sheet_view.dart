@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AddToDoBottomSheetView extends StatefulWidget {
-  /// [새 TODO를 추가하는 바텀 시트]
-  AddToDoBottomSheetView(this.onSave);
+  /// [새 TODO 추가하는 바텀시트 뷰]
+  const AddToDoBottomSheetView({super.key, required this.onSave});
 
-  /// [TODO 저장 : 콜백 메소드]
+  /// [콜백 메소드]
   final void Function(
     String title,
     String? description,
@@ -31,16 +31,6 @@ class _AddToDoBottomSheetState extends State<AddToDoBottomSheetView> {
     super.dispose();
   }
 
-  /// [TODO 저장]
-  void saveToDo() {
-    final title = titleController.text.trim();
-    final detail = showDetail ? detailController.text.trim() : null;
-    if (titleController.text.isNotEmpty) {
-      widget.onSave(title, detail, star, false);
-      Navigator.of(context).pop();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -54,7 +44,7 @@ class _AddToDoBottomSheetState extends State<AddToDoBottomSheetView> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // [타이틀 입력]
+          // 타이틀 입력
           TextField(
             onChanged: (_) => setState(() {}),
             maxLines: 1,
@@ -69,7 +59,7 @@ class _AddToDoBottomSheetState extends State<AddToDoBottomSheetView> {
             ),
           ),
 
-          // [세부정보 입력]
+          // 세부정보 입력
           if (showDetail)
             TextField(
               maxLines: null,
@@ -83,10 +73,10 @@ class _AddToDoBottomSheetState extends State<AddToDoBottomSheetView> {
               ),
             ),
 
-          // [아이콘 메뉴]
+          // 아이콘 메뉴
           Row(
             children: [
-              // [세부정보 토글 버튼]
+              // 세부정보 토글 버튼
               IconButton(
                 onPressed: () => setState(() => showDetail = !showDetail),
                 icon: Icon(
@@ -97,7 +87,7 @@ class _AddToDoBottomSheetState extends State<AddToDoBottomSheetView> {
               ),
               SizedBox(width: 20),
 
-              // [즐겨찾기 토글 버튼]
+              // 즐겨찾기 토글 버튼
               IconButton(
                 onPressed: () => setState(() => star = !star),
                 icon: Icon(
@@ -108,7 +98,7 @@ class _AddToDoBottomSheetState extends State<AddToDoBottomSheetView> {
               ),
               Spacer(),
 
-              // [저장 버튼]
+              // 저장 버튼
               TextButton(
                 onPressed: titleController.text.isNotEmpty ? saveToDo : null,
                 child: Text(
@@ -125,5 +115,15 @@ class _AddToDoBottomSheetState extends State<AddToDoBottomSheetView> {
         ],
       ),
     );
+  }
+
+  /// [TODO 저장]
+  void saveToDo() {
+    final title = titleController.text.trim();
+    final detail = showDetail ? detailController.text.trim() : null;
+    if (titleController.text.isNotEmpty) {
+      widget.onSave(title, detail, star, false);
+      Navigator.of(context).pop();
+    }
   }
 }
