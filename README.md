@@ -37,7 +37,7 @@
     
     <img width="2170" height="630" alt="6" src="https://github.com/user-attachments/assets/8ecdb546-24e5-4024-9d94-1e5d1fd93158" />
 
-    Geolocator를 활용해 사용자의 현재 위치를 가져오고, Open-Meteo API를 통해 해당 지역의 날씨 정보를 받아오는 위젯을 구현했다.
+    Geolocator를 활용해 사용자의 현재 위치를 가져오고, Open-Meteo API를 통해 해당 지역의 날씨 정보를 받아오는 위젯을 구현했다.<br>
     bottomNavigationBar를 통해 날씨 위젯을 출력하게 했다.
 
    <br>
