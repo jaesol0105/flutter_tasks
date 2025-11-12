@@ -33,7 +33,7 @@
 ---
 <strong>[2025.11.12]</strong>
 
-- ☀️ Geolocator + Open-Meteo API 기반 날씨 위젯
+- ☀️ <strong>Geolocator + Open-Meteo API 기반 날씨 위젯</strong>
     
     <img width="2170" height="630" alt="6" src="https://github.com/user-attachments/assets/8ecdb546-24e5-4024-9d94-1e5d1fd93158" />
 
@@ -45,7 +45,7 @@
 ---
 <strong>[2025.10.23]</strong>
 
-- ⬅️ 밀어서 삭제/ 되돌리기
+- ⬅️ <strong>밀어서 삭제/ 되돌리기</strong>
     
     <img width="2170" height="630" alt="1" src="https://github.com/user-attachments/assets/b13e5327-3875-4bc2-ab76-09dba2e85dee" />
 
@@ -54,7 +54,7 @@
 
    <br>
     
-- ⚒️ 디테일 페이지에서의 내용 수정 / TODO 삭제
+- ⚒️ <strong>디테일 페이지에서의 내용 수정 / TODO 삭제</strong>
     
     <img width="3260" height="2400" alt="2-1" src="https://github.com/user-attachments/assets/394c9be4-6d6c-4000-a54f-2d01353bf6e1" />
 
@@ -64,7 +64,7 @@
 
    <br>
     
-- 🧱 제목이 빈 칸일 경우 스낵바 출력
+- 🧱 <strong>제목이 빈 칸일 경우 스낵바 출력</strong>
 
     <img width="3260" height="2400" alt="0" src="https://github.com/user-attachments/assets/d49457c6-339f-44fc-a014-4092e47f9ddc" />
 
@@ -72,7 +72,7 @@
 
   <br>
 
-- 🕑 마감일/시간 설정
+- 🕑 <strong>마감일/시간 설정</strong>
     
     <img width="3260" height="2400" alt="3" src="https://github.com/user-attachments/assets/4258a661-7fcd-4efc-b4a5-deea2b7d6833" />
 
@@ -88,7 +88,7 @@
 ---
 <strong>[2025.10.23]</strong>
 
-- ⬛ 화면 구성:  EmptyView / ListView /  DetailView / DateTimePicker
+- ⬛ 화면:  EmptyView / ListView /  DetailView / DateTimePicker
     
     <img width="4350" height="2400" alt="4-1" src="https://github.com/user-attachments/assets/a17d5e10-8fe8-46b5-a06f-1f69f6ead433" />
 
