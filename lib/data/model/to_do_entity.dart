@@ -12,27 +12,20 @@ abstract class ToDoEntity with _$ToDoEntity {
     String? description,
     @JsonKey(name: 'is_favorite') required bool isFavorite,
     @JsonKey(name: 'is_done') required bool isDone,
-    @JsonKey(
-      name: 'created_at',
-      fromJson: _convertToDateTime,
-      toJson: _convertToTimestamp,
-    )
-    DateTime? createdAt,
-    @JsonKey(fromJson: _convertToDateTime, toJson: _convertToTimestamp)
-    DateTime? due, // deadLine으로 rename 하기
+    @JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? createdAt,
+    @JsonKey(name: 'dead_line', fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? deadLine,
   }) = _ToDoEntity;
 
-  factory ToDoEntity.fromJson(Map<String, dynamic> json) =>
-      _$ToDoEntityFromJson(json);
+  factory ToDoEntity.fromJson(Map<String, dynamic> json) => _$ToDoEntityFromJson(json);
 }
 
-// Timestamp to DateTime 컨버터
+/// Timestamp to DateTime 컨버터
 DateTime? _convertToDateTime(dynamic time) {
   if (time == null) return null;
   return time.toDate();
 }
 
-// DateTime to Timestamp 컨버터
+/// DateTime to Timestamp 컨버터
 Object? _convertToTimestamp(DateTime? date) {
   if (date == null) return null;
   return Timestamp.fromDate(date);

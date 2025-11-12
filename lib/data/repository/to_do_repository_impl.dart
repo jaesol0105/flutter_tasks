@@ -12,27 +12,18 @@ class ToDoRepositoryImpl implements ToDoRepository {
 
   @override
   Future<void> addToDo(ToDoEntity toDo) async {
-    final collectionRef = firestore.collection('todo');
-    await collectionRef.add({
-      'title': toDo.title,
-      'description': toDo.description,
-      'is_favorite': toDo.isFavorite,
-      'is_done': toDo.isDone,
-      'created_at': toDo.createdAt ?? FieldValue.serverTimestamp(), // 서버 시간
-      'due': toDo.due != null ? Timestamp.fromDate(toDo.due!) : null,
-    });
+    final json = toDo.toJson();
+    // 서버 시간 사용
+    json['created_at'] = toDo.createdAt ?? FieldValue.serverTimestamp();
+    json['dead_line'] = toDo.deadLine != null ? Timestamp.fromDate(toDo.deadLine!) : null;
+    await firestore.collection('todo').add(json);
   }
 
   @override
   Future<void> updateToDo(ToDoEntity toDo) async {
-    final documentRef = firestore.collection('todo').doc(toDo.id);
-    await documentRef.update({
-      'title': toDo.title,
-      'description': toDo.description,
-      'is_favorite': toDo.isFavorite,
-      'is_done': toDo.isDone,
-      'due': toDo.due != null ? Timestamp.fromDate(toDo.due!) : null,
-    });
+    final json = toDo.toJson();
+    json['dead_line'] = toDo.deadLine != null ? Timestamp.fromDate(toDo.deadLine!) : null;
+    await firestore.collection('todo').doc(toDo.id).update(json);
   }
 
   @override
@@ -40,28 +31,18 @@ class ToDoRepositoryImpl implements ToDoRepository {
     await firestore.collection('todo').doc(id).delete();
   }
 
-  @override
   Future<List<ToDoEntity>> getToDos() async {
-    final collectionRef = firestore.collection('todo');
-    // 오래된순 정렬
-    final snapshot = await collectionRef
-        .orderBy('created_at', descending: false)
-        .get();
+    // 오래된 순 정렬
+    final snapshot = await firestore.collection('todo').orderBy('created_at', descending: false).get();
     final documentSnaphots = snapshot.docs;
-
-    final list = documentSnaphots.map((doc) {
-      final data = doc.data();
-      final map = {'id': doc.id, ...data};
-      return ToDoEntity.fromJson(map);
-    }).toList();
-
-    return list;
+    return documentSnaphots.map((doc) => ToDoEntity.fromJson({...doc.data(), 'id': doc.id})).toList();
   }
 }
 
 /// [Repository Provider]
 @riverpod
 ToDoRepository toDoRepository(Ref ref) {
+  // DI
   final firestore = FirebaseFirestore.instance;
   return ToDoRepositoryImpl(firestore: firestore);
 }

@@ -8,12 +8,12 @@ part of 'weather_repository_impl.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// [Repository Provider : client가 자꾸 닫혀서 keepAlive 처리함]
+/// Repository Provider (client 계속 닫혀서 keepAlive)
 
 @ProviderFor(weatherRepository)
 const weatherRepositoryProvider = WeatherRepositoryProvider._();
 
-/// [Repository Provider : client가 자꾸 닫혀서 keepAlive 처리함]
+/// Repository Provider (client 계속 닫혀서 keepAlive)
 
 final class WeatherRepositoryProvider
     extends
@@ -23,7 +23,7 @@ final class WeatherRepositoryProvider
           WeatherRepository
         >
     with $Provider<WeatherRepository> {
-  /// [Repository Provider : client가 자꾸 닫혀서 keepAlive 처리함]
+  /// Repository Provider (client 계속 닫혀서 keepAlive)
   const WeatherRepositoryProvider._()
     : super(
         from: null,
