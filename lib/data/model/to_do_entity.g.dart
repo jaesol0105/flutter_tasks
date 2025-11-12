@@ -13,7 +13,7 @@ _ToDoEntity _$ToDoEntityFromJson(Map<String, dynamic> json) => _ToDoEntity(
   isFavorite: json['is_favorite'] as bool,
   isDone: json['is_done'] as bool,
   createdAt: _convertToDateTime(json['created_at']),
-  due: json['due'] == null ? null : DateTime.parse(json['due'] as String),
+  due: _convertToDateTime(json['due']),
 );
 
 Map<String, dynamic> _$ToDoEntityToJson(_ToDoEntity instance) =>
@@ -24,5 +24,5 @@ Map<String, dynamic> _$ToDoEntityToJson(_ToDoEntity instance) =>
       'is_favorite': instance.isFavorite,
       'is_done': instance.isDone,
       'created_at': _convertToTimestamp(instance.createdAt),
-      'due': instance.due?.toIso8601String(),
+      'due': _convertToTimestamp(instance.due),
     };

@@ -79,4 +79,10 @@ class HomePageViewModel extends _$HomePageViewModel {
 
     return target;
   }
+
+  /// [TODO 수정 : detailPage 에서 사용, 토글함수랑 기능상 중복인가?]
+  Future<void> updateToDo(ToDoEntity todo) async {
+    await repo.updateToDo(todo);
+    await reload();
+  }
 }

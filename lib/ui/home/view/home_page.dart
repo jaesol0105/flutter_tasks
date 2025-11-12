@@ -40,7 +40,14 @@ class HomePage extends HookConsumerWidget {
                   toDoList: todoList,
                   onToggleDone: (id) => vm.toggleDone(id),
                   onToggleFavorite: (id) => vm.toggleFavorite(id),
-                  onNavigateToDetail: (todo) {},
+                  onNavigateToDetail: (todo) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ToDoDetailPage(toDo: todo),
+                      ),
+                    );
+                  },
                   onDeleteToDo: (id) => vm.deleteToDo(id),
                   onReInsertToDo: (todo) => vm.addToDo(todo),
                 );

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ToDoEntity {
 
- String get id; String get title; String? get description;@JsonKey(name: 'is_favorite') bool get isFavorite;@JsonKey(name: 'is_done') bool get isDone;@JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? get createdAt; DateTime? get due;
+ String get id; String get title; String? get description;@JsonKey(name: 'is_favorite') bool get isFavorite;@JsonKey(name: 'is_done') bool get isDone;@JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? get createdAt;@JsonKey(fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? get due;
 /// Create a copy of ToDoEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ToDoEntityCopyWith<$Res>  {
   factory $ToDoEntityCopyWith(ToDoEntity value, $Res Function(ToDoEntity) _then) = _$ToDoEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? description,@JsonKey(name: 'is_favorite') bool isFavorite,@JsonKey(name: 'is_done') bool isDone,@JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? createdAt, DateTime? due
+ String id, String title, String? description,@JsonKey(name: 'is_favorite') bool isFavorite,@JsonKey(name: 'is_done') bool isDone,@JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? createdAt,@JsonKey(fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? due
 });
 
 
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? description, @JsonKey(name: 'is_favorite')  bool isFavorite, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp)  DateTime? createdAt,  DateTime? due)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? description, @JsonKey(name: 'is_favorite')  bool isFavorite, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp)  DateTime? createdAt, @JsonKey(fromJson: _convertToDateTime, toJson: _convertToTimestamp)  DateTime? due)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ToDoEntity() when $default != null:
 return $default(_that.id,_that.title,_that.description,_that.isFavorite,_that.isDone,_that.createdAt,_that.due);case _:
@@ -180,7 +180,7 @@ return $default(_that.id,_that.title,_that.description,_that.isFavorite,_that.is
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? description, @JsonKey(name: 'is_favorite')  bool isFavorite, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp)  DateTime? createdAt,  DateTime? due)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? description, @JsonKey(name: 'is_favorite')  bool isFavorite, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp)  DateTime? createdAt, @JsonKey(fromJson: _convertToDateTime, toJson: _convertToTimestamp)  DateTime? due)  $default,) {final _that = this;
 switch (_that) {
 case _ToDoEntity():
 return $default(_that.id,_that.title,_that.description,_that.isFavorite,_that.isDone,_that.createdAt,_that.due);case _:
@@ -200,7 +200,7 @@ return $default(_that.id,_that.title,_that.description,_that.isFavorite,_that.is
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? description, @JsonKey(name: 'is_favorite')  bool isFavorite, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp)  DateTime? createdAt,  DateTime? due)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? description, @JsonKey(name: 'is_favorite')  bool isFavorite, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp)  DateTime? createdAt, @JsonKey(fromJson: _convertToDateTime, toJson: _convertToTimestamp)  DateTime? due)?  $default,) {final _that = this;
 switch (_that) {
 case _ToDoEntity() when $default != null:
 return $default(_that.id,_that.title,_that.description,_that.isFavorite,_that.isDone,_that.createdAt,_that.due);case _:
@@ -215,7 +215,7 @@ return $default(_that.id,_that.title,_that.description,_that.isFavorite,_that.is
 @JsonSerializable()
 
 class _ToDoEntity implements ToDoEntity {
-  const _ToDoEntity({required this.id, required this.title, this.description, @JsonKey(name: 'is_favorite') required this.isFavorite, @JsonKey(name: 'is_done') required this.isDone, @JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp) this.createdAt, this.due});
+  const _ToDoEntity({required this.id, required this.title, this.description, @JsonKey(name: 'is_favorite') required this.isFavorite, @JsonKey(name: 'is_done') required this.isDone, @JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp) this.createdAt, @JsonKey(fromJson: _convertToDateTime, toJson: _convertToTimestamp) this.due});
   factory _ToDoEntity.fromJson(Map<String, dynamic> json) => _$ToDoEntityFromJson(json);
 
 @override final  String id;
@@ -224,7 +224,7 @@ class _ToDoEntity implements ToDoEntity {
 @override@JsonKey(name: 'is_favorite') final  bool isFavorite;
 @override@JsonKey(name: 'is_done') final  bool isDone;
 @override@JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp) final  DateTime? createdAt;
-@override final  DateTime? due;
+@override@JsonKey(fromJson: _convertToDateTime, toJson: _convertToTimestamp) final  DateTime? due;
 
 /// Create a copy of ToDoEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -259,7 +259,7 @@ abstract mixin class _$ToDoEntityCopyWith<$Res> implements $ToDoEntityCopyWith<$
   factory _$ToDoEntityCopyWith(_ToDoEntity value, $Res Function(_ToDoEntity) _then) = __$ToDoEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? description,@JsonKey(name: 'is_favorite') bool isFavorite,@JsonKey(name: 'is_done') bool isDone,@JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? createdAt, DateTime? due
+ String id, String title, String? description,@JsonKey(name: 'is_favorite') bool isFavorite,@JsonKey(name: 'is_done') bool isDone,@JsonKey(name: 'created_at', fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? createdAt,@JsonKey(fromJson: _convertToDateTime, toJson: _convertToTimestamp) DateTime? due
 });
 
 

@@ -18,7 +18,8 @@ abstract class ToDoEntity with _$ToDoEntity {
       toJson: _convertToTimestamp,
     )
     DateTime? createdAt,
-    DateTime? due,
+    @JsonKey(fromJson: _convertToDateTime, toJson: _convertToTimestamp)
+    DateTime? due, // deadLine으로 rename 하기
   }) = _ToDoEntity;
 
   factory ToDoEntity.fromJson(Map<String, dynamic> json) =>

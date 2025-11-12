@@ -17,7 +17,7 @@ class ToDoListView extends StatelessWidget {
   final List<ToDoEntity> toDoList;
   final void Function(String) onToggleDone;
   final void Function(String) onToggleFavorite;
-  final void Function(String) onNavigateToDetail;
+  final void Function(ToDoEntity) onNavigateToDetail;
   final Future<ToDoEntity?> Function(String) onDeleteToDo;
   final void Function(ToDoEntity) onReInsertToDo;
 
@@ -67,7 +67,7 @@ class ToDoListView extends StatelessWidget {
             toDo: item,
             onToggleFavorite: () => onToggleFavorite(item.id),
             onToggleDone: () => onToggleDone(item.id),
-            onNavigateToDetail: () => onNavigateToDetail(item.id),
+            onNavigateToDetail: () => onNavigateToDetail(item),
           ),
         );
       },
