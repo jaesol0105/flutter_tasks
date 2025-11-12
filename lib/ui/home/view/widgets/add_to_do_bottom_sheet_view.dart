@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class AddToDoBottomSheetView extends HookWidget {
-  /// [새 TODO 추가하는 바텀시트 뷰]
+  /// 새 TODO 추가하는 BottomSheet
   const AddToDoBottomSheetView({super.key, required this.onAddToDo});
 
   /// [콜백 메소드]
-  final void Function(
-    String title,
-    String? description,
-    bool isFavorite,
-    bool isDone,
-  )
-  onAddToDo;
+  final void Function(String title, String? description, bool isFavorite, bool isDone) onAddToDo;
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +30,7 @@ class AddToDoBottomSheetView extends HookWidget {
     }
 
     return Container(
-      padding: EdgeInsets.fromLTRB(
-        20,
-        12,
-        20,
-        MediaQuery.of(context).viewInsets.bottom,
-      ),
+      padding: EdgeInsets.fromLTRB(20, 12, 20, MediaQuery.of(context).viewInsets.bottom),
 
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -80,11 +69,7 @@ class AddToDoBottomSheetView extends HookWidget {
               // 세부정보 토글 버튼
               IconButton(
                 onPressed: () => {showDetail.value = !showDetail.value},
-                icon: Icon(
-                  Icons.short_text_rounded,
-                  color: Theme.of(context).dividerColor,
-                  size: 24,
-                ),
+                icon: Icon(Icons.short_text_rounded, color: Theme.of(context).dividerColor, size: 24),
               ),
               SizedBox(width: 20),
 
@@ -104,11 +89,7 @@ class AddToDoBottomSheetView extends HookWidget {
                 onPressed: titleController.text.isNotEmpty ? saveToDo : null,
                 child: Text(
                   '저장',
-                  style: TextStyle(
-                    color: titleController.text.isNotEmpty
-                        ? Colors.pinkAccent
-                        : Colors.grey,
-                  ),
+                  style: TextStyle(color: titleController.text.isNotEmpty ? Colors.pinkAccent : Colors.grey),
                 ),
               ),
             ],

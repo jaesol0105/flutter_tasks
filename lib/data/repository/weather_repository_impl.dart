@@ -38,7 +38,7 @@ class WeatherRepositoryImpl implements WeatherRepository {
 /// Repository Provider (client 계속 닫혀서 keepAlive)
 @Riverpod(keepAlive: true)
 WeatherRepository weatherRepository(Ref ref) {
-  final client = http.Client();
+  final client = http.Client(); // DI
   ref.onDispose(client.close); // 앱 종료시 정리
   return WeatherRepositoryImpl(client: client);
 }

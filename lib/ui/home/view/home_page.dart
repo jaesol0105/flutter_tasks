@@ -23,10 +23,7 @@ class HomePage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          title,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
+        title: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       ),
 
       body: state.when(
@@ -41,12 +38,7 @@ class HomePage extends HookConsumerWidget {
                   onToggleDone: (id) => vm.toggleDone(id),
                   onToggleFavorite: (id) => vm.toggleFavorite(id),
                   onNavigateToDetail: (todo) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ToDoDetailPage(toDo: todo),
-                      ),
-                    );
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => ToDoDetailPage(toDo: todo)));
                   },
                   onDeleteToDo: (id) => vm.deleteToDo(id),
                   onReInsertToDo: (todo) => vm.addToDo(todo),
@@ -65,16 +57,9 @@ class HomePage extends HookConsumerWidget {
             isScrollControlled: true,
             builder: (context) {
               return AddToDoBottomSheetView(
-                onAddToDo: (title, description, isFavorite, isDone) =>
-                    vm.addToDo(
-                      ToDoEntity(
-                        id: '',
-                        title: title,
-                        description: description,
-                        isFavorite: isFavorite,
-                        isDone: isDone,
-                      ),
-                    ),
+                onAddToDo: (title, description, isFavorite, isDone) => vm.addToDo(
+                  ToDoEntity(id: '', title: title, description: description, isFavorite: isFavorite, isDone: isDone),
+                ),
               );
             },
           );

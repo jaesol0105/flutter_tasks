@@ -11,19 +11,17 @@ class ToDoRepositoryImpl implements ToDoRepository {
   final FirebaseFirestore firestore;
 
   @override
-  Future<void> addToDo(ToDoEntity toDo) async {
+  Future<ToDoEntity> addToDo(ToDoEntity toDo) async {
     final json = toDo.toJson();
     // 서버 시간 사용
     json['created_at'] = toDo.createdAt ?? FieldValue.serverTimestamp();
-    json['dead_line'] = toDo.deadLine != null ? Timestamp.fromDate(toDo.deadLine!) : null;
-    await firestore.collection('todo').add(json);
+    final ref = await firestore.collection('todo').add(json);
+    return toDo.copyWith(id: ref.id);
   }
 
   @override
   Future<void> updateToDo(ToDoEntity toDo) async {
-    final json = toDo.toJson();
-    json['dead_line'] = toDo.deadLine != null ? Timestamp.fromDate(toDo.deadLine!) : null;
-    await firestore.collection('todo').doc(toDo.id).update(json);
+    await firestore.collection('todo').doc(toDo.id).update(toDo.toJson());
   }
 
   @override
@@ -31,6 +29,7 @@ class ToDoRepositoryImpl implements ToDoRepository {
     await firestore.collection('todo').doc(id).delete();
   }
 
+  @override
   Future<List<ToDoEntity>> getToDos() async {
     // 오래된 순 정렬
     final snapshot = await firestore.collection('todo').orderBy('created_at', descending: false).get();
@@ -39,10 +38,9 @@ class ToDoRepositoryImpl implements ToDoRepository {
   }
 }
 
-/// [Repository Provider]
+/// Repository Provider
 @riverpod
 ToDoRepository toDoRepository(Ref ref) {
-  // DI
-  final firestore = FirebaseFirestore.instance;
+  final firestore = FirebaseFirestore.instance; // DI
   return ToDoRepositoryImpl(firestore: firestore);
 }

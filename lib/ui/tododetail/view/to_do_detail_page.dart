@@ -18,12 +18,10 @@ class ToDoDetailPage extends HookConsumerWidget {
     final vm = ref.read(homePageViewModelProvider.notifier);
 
     final titleController = useTextEditingController(text: toDo.title);
-    final detailController = useTextEditingController(
-      text: toDo.description ?? "",
-    );
+    final detailController = useTextEditingController(text: toDo.description ?? "");
 
     final fav = useState<bool>(toDo.isFavorite); // 북마크 상태
-    final due = useState<DateTime?>(toDo.due); // 마감일 상태
+    final due = useState<DateTime?>(toDo.deadLine); // 마감일 상태
     final isEdit = useState<bool>(false); // 변경 여부
 
     /// [변경 여부 체크 - 제목/내용/북마크/마감일]
@@ -32,7 +30,7 @@ class ToDoDetailPage extends HookConsumerWidget {
           titleController.text != toDo.title ||
           detailController.text != (toDo.description ?? "") ||
           fav.value != toDo.isFavorite ||
-          due.value != toDo.due;
+          due.value != toDo.deadLine;
       isEdit.value = changed;
     }
 
@@ -65,18 +63,9 @@ class ToDoDetailPage extends HookConsumerWidget {
           title: const Text('변경사항이 있어요'),
           content: const Text('저장하고 나갈까요?'),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, LeaveAction.cancel),
-              child: const Text('취소'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, LeaveAction.discard),
-              child: const Text('저장 안 함'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, LeaveAction.save),
-              child: const Text('저장'),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context, LeaveAction.cancel), child: const Text('취소')),
+            TextButton(onPressed: () => Navigator.pop(context, LeaveAction.discard), child: const Text('저장 안 함')),
+            FilledButton(onPressed: () => Navigator.pop(context, LeaveAction.save), child: const Text('저장')),
           ],
         ),
       );
@@ -91,14 +80,8 @@ class ToDoDetailPage extends HookConsumerWidget {
           title: const Text('할 일을 삭제할까요?'),
           content: const Text('삭제 후엔 복구할 수 없어요.'),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, DeleteAction.cancel),
-              child: const Text('취소'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, DeleteAction.done),
-              child: const Text('삭제'),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context, DeleteAction.cancel), child: const Text('취소')),
+            FilledButton(onPressed: () => Navigator.pop(context, DeleteAction.done), child: const Text('삭제')),
           ],
         ),
       );
@@ -122,20 +105,11 @@ class ToDoDetailPage extends HookConsumerWidget {
       // TimePicker
       final pickedTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay(
-          hour: due.value?.hour ?? now.hour,
-          minute: due.value?.minute ?? now.minute,
-        ),
+        initialTime: TimeOfDay(hour: due.value?.hour ?? now.hour, minute: due.value?.minute ?? now.minute),
       );
       if (pickedTime == null) return;
 
-      final dueDate = DateTime(
-        pickedDate.year,
-        pickedDate.month,
-        pickedDate.day,
-        pickedTime.hour,
-        pickedTime.minute,
-      );
+      final dueDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
 
       due.value = dueDate;
       markEditIfChanged();
@@ -151,11 +125,9 @@ class ToDoDetailPage extends HookConsumerWidget {
     Future<void> saveAndPop() async {
       final updated = toDo.copyWith(
         title: titleController.text,
-        description: detailController.text.isEmpty
-            ? null
-            : detailController.text,
+        description: detailController.text.isEmpty ? null : detailController.text,
         isFavorite: fav.value,
-        due: due.value,
+        deadLine: due.value,
       );
 
       await vm.updateToDo(updated);
@@ -206,10 +178,7 @@ class ToDoDetailPage extends HookConsumerWidget {
           leading: const BackButton(),
           actions: [
             IconButton(icon: Icon(Icons.delete), onPressed: deleteAndPop),
-            IconButton(
-              icon: fav.value ? Icon(Icons.star) : Icon(Icons.star_border),
-              onPressed: toggleFavorite,
-            ),
+            IconButton(icon: fav.value ? Icon(Icons.star) : Icon(Icons.star_border), onPressed: toggleFavorite),
           ],
         ),
 
