@@ -12,7 +12,7 @@ class WeatherViewModel extends _$WeatherViewModel {
     return load();
   }
 
-  /// [Geolocator 날씨 정보 불러오기]
+  /// 날씨 정보 불러오기
   Future<WeatherEntity> load() async {
     // 위치 활성화 여부 체크
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -39,12 +39,9 @@ class WeatherViewModel extends _$WeatherViewModel {
       locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     );
 
-    // Repository
+    // 위치 기반 날씨 정보 반환
     final repo = ref.read(weatherRepositoryProvider);
-    final weather = await repo.getCurrentWeather(
-      latitude: position.latitude,
-      longitude: position.longitude,
-    );
+    final weather = await repo.getCurrentWeather(latitude: position.latitude, longitude: position.longitude);
     return weather;
   }
 }

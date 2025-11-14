@@ -8,14 +8,12 @@ abstract class WeatherEntity with _$WeatherEntity {
   const factory WeatherEntity({
     @JsonKey(name: 'temperature_2m') required num temperature,
     @JsonKey(name: 'wind_speed_10m') required num windSpeed,
-    @JsonKey(name: 'weather_code', fromJson: _convertWeatherCode)
-    required String weatherDescription,
+    @JsonKey(name: 'weather_code', fromJson: _convertWeatherCode) required String weatherDescription,
     @JsonKey(name: 'is_day') required num isDay,
     @JsonKey(fromJson: _convertToDateTime) required DateTime time,
   }) = _WeatherEntity;
 
-  factory WeatherEntity.fromJson(Map<String, dynamic> json) =>
-      _$WeatherEntityFromJson(json);
+  factory WeatherEntity.fromJson(Map<String, dynamic> json) => _$WeatherEntityFromJson(json);
 }
 
 DateTime _convertToDateTime(String timeString) {

@@ -8,17 +8,17 @@ part of 'to_do_repository_impl.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// [Repository Provider]
+/// Repository Provider
 
 @ProviderFor(toDoRepository)
 const toDoRepositoryProvider = ToDoRepositoryProvider._();
 
-/// [Repository Provider]
+/// Repository Provider
 
 final class ToDoRepositoryProvider
     extends $FunctionalProvider<ToDoRepository, ToDoRepository, ToDoRepository>
     with $Provider<ToDoRepository> {
-  /// [Repository Provider]
+  /// Repository Provider
   const ToDoRepositoryProvider._()
     : super(
         from: null,

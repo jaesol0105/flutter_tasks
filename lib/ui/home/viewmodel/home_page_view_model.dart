@@ -14,75 +14,85 @@ class HomePageViewModel extends _$HomePageViewModel {
     return await repo.getToDos();
   }
 
-  /// [TODO 목록을 불러와 상태를 갱신]
-  Future<void> reload() async {
-    // state = const AsyncLoading();
+  /// todo 추가
+  Future<void> addToDo(ToDoEntity todo) async {
+    final list = state.value;
+    if (list == null) return;
+
     try {
-      final repo = ref.read(toDoRepositoryProvider);
-      final list = await repo.getToDos();
-      state = AsyncData(list);
+      final created = await repo.addToDo(todo); // 문서 ID state에 반영 -> UUID로 바꿀까..
+      state = AsyncData([...list, created]);
     } catch (e, stack) {
       state = AsyncError(e, stack);
     }
   }
 
-  /// [TODO 추가]
-  Future<void> addToDo(ToDoEntity todo) async {
-    await repo.addToDo(todo);
-    await reload();
-  }
-
-  /// [TODO 북마크 토글]
-  Future<void> toggleFavorite(String? id) async {
-    final current = state.value;
-    if (current == null) return;
-
-    final target = current.firstWhere(
-      (e) => e.id == id,
-      orElse: () => throw Exception('home_vm:toggleFavorite'),
-    );
-
-    final updated = target.copyWith(isFavorite: !target.isFavorite);
-
-    await repo.updateToDo(updated);
-    await reload();
-  }
-
-  /// [TODO 완료 토글]
-  Future<void> toggleDone(String id) async {
-    final current = state.value;
-    if (current == null) return;
-
-    final target = current.firstWhere(
-      (e) => e.id == id,
-      orElse: () => throw Exception('home_vm:toggleDone'),
-    );
-
-    final updated = target.copyWith(isDone: !target.isDone);
-
-    await repo.updateToDo(updated);
-    await reload();
-  }
-
-  /// [TODO 삭제]
-  Future<ToDoEntity?> deleteToDo(String id) async {
-    final current = state.value;
-    if (current == null) return null;
-
-    final target = current.firstWhere(
-      (e) => e.id == id,
-      orElse: () => throw Exception('home_vm:deleteToDo'),
-    );
-
-    await repo.deleteToDo(target.id);
-    await reload();
-
-    return target;
-  }
-
-  /// [TODO 수정 : detailPage 에서 사용, 토글함수랑 기능상 중복인가?]
+  /// todo 수정
   Future<void> updateToDo(ToDoEntity todo) async {
-    await repo.updateToDo(todo);
-    await reload();
+    final list = state.value;
+    if (list == null) return;
+
+    final idx = list.indexWhere((e) => e.id == todo.id);
+    if (idx < 0) return;
+
+    state = AsyncData([...list]..[idx] = todo);
+    try {
+      await repo.updateToDo(todo);
+    } catch (e, stack) {
+      state = AsyncError(e, stack);
+    }
+  }
+
+  /// todo 삭제
+  Future<ToDoEntity?> deleteToDo(String id) async {
+    final list = state.value;
+    if (list == null) return null;
+
+    final idx = list.indexWhere((e) => e.id == id);
+    if (idx < 0) return null;
+
+    // 되돌리기를 위해 삭제 전 todo 백업
+    final prev = list[idx];
+    state = AsyncData([...list]..removeAt(idx));
+    try {
+      await repo.deleteToDo(id);
+    } catch (e, stack) {
+      state = AsyncError(e, stack);
+    }
+    return prev;
+  }
+
+  /// todo 북마크 토글
+  Future<void> toggleFavorite(String id) async {
+    final list = state.value;
+    if (list == null) return;
+
+    final idx = list.indexWhere((e) => e.id == id);
+    if (idx < 0) return;
+
+    final updated = list[idx].copyWith(isFavorite: !list[idx].isFavorite);
+    state = AsyncData([...list]..[idx] = updated);
+    try {
+      await repo.updateToDo(updated);
+    } catch (e, stack) {
+      state = AsyncError(e, stack);
+    }
+  }
+
+  /// todo 완료 토글
+  Future<void> toggleDone(String id) async {
+    final list = state.value;
+    if (list == null) return;
+
+    final idx = list.indexWhere((e) => e.id == id);
+    if (idx < 0) return;
+
+    final updated = list[idx].copyWith(isDone: !list[idx].isDone);
+    state = AsyncData([...list]..[idx] = updated);
+    try {
+      await repo.updateToDo(updated);
+    } catch (e, stack) {
+      state = AsyncError(e, stack);
+    }
   }
 }
