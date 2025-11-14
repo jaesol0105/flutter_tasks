@@ -6,8 +6,6 @@ import 'package:tasks/constants/action_enums.dart';
 import 'package:tasks/ui/home/viewmodel/home_page_view_model.dart';
 import 'package:tasks/ui/tododetail/view/widgets/to_do_detail_view.dart';
 
-/// 뷰에 로컬 함수가 너무 많은데 깔끔하게 줄일 수 있는 방법?
-
 class ToDoDetailPage extends HookConsumerWidget {
   const ToDoDetailPage({super.key, required this.toDo});
 
@@ -15,47 +13,40 @@ class ToDoDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vm = ref.read(homePageViewModelProvider.notifier);
-
     final titleController = useTextEditingController(text: toDo.title);
     final detailController = useTextEditingController(text: toDo.description ?? "");
 
     final fav = useState<bool>(toDo.isFavorite); // 북마크 상태
-    final due = useState<DateTime?>(toDo.deadLine); // 마감일 상태
+    final deadLine = useState<DateTime?>(toDo.deadLine); // 마감일 상태
     final isEdit = useState<bool>(false); // 변경 여부
 
-    /// [변경 여부 체크 - 제목/내용/북마크/마감일]
+    /// 변경 여부 체크 - 제목/내용/북마크/마감일
     void markEditIfChanged() {
       final changed =
           titleController.text != toDo.title ||
           detailController.text != (toDo.description ?? "") ||
           fav.value != toDo.isFavorite ||
-          due.value != toDo.deadLine;
+          deadLine.value != toDo.deadLine;
       isEdit.value = changed;
     }
 
-    // [textController 리스너 연결]
+    /// textController 리스너 연결
     useEffect(() {
       titleController.addListener(markEditIfChanged);
       detailController.addListener(markEditIfChanged);
     }, []);
 
-    /// [경고 스낵바 출력]
+    /// 경고 스낵바 출력
     void showSnackBar(String text) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            text,
-            style: TextStyle(
-              color: Colors.white, // 미리 정의된 색상 사용
-            ),
-          ),
+          content: Text(text, style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.redAccent,
         ),
       );
     }
 
-    /// [TODO 저장 경고 대화상자 출력]
+    /// todo 저장 경고 대화상자 출력
     Future<LeaveAction?> showLeaveDialog(BuildContext context) async {
       final action = await showDialog<LeaveAction>(
         context: context,
@@ -72,7 +63,7 @@ class ToDoDetailPage extends HookConsumerWidget {
       return action;
     }
 
-    /// [TODO 삭제 경고 대화상자 출력]
+    /// todo 삭제 경고 대화상자 출력
     Future<bool> showDeleteDialog() async {
       final action = await showDialog<DeleteAction>(
         context: context,
@@ -89,14 +80,14 @@ class ToDoDetailPage extends HookConsumerWidget {
       return action == DeleteAction.done;
     }
 
-    /// [TODO 마감일 설정]
-    Future<void> pickDue() async {
+    /// todo 마감일 설정
+    Future<void> pickDeadLine() async {
       final now = DateTime.now();
 
       // DatePicker
       final pickedDate = await showDatePicker(
         context: context,
-        initialDate: due.value ?? now,
+        initialDate: deadLine.value ?? now,
         firstDate: now,
         lastDate: DateTime(now.year + 5),
       );
@@ -105,45 +96,45 @@ class ToDoDetailPage extends HookConsumerWidget {
       // TimePicker
       final pickedTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay(hour: due.value?.hour ?? now.hour, minute: due.value?.minute ?? now.minute),
+        initialTime: TimeOfDay(hour: deadLine.value?.hour ?? now.hour, minute: deadLine.value?.minute ?? now.minute),
       );
       if (pickedTime == null) return;
 
-      final dueDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
+      final picked = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
 
-      due.value = dueDate;
+      deadLine.value = picked;
       markEditIfChanged();
     }
 
-    /// [TODO 북마크 토글]
+    /// todo 북마크 토글
     void toggleFavorite() {
       fav.value = !fav.value;
       markEditIfChanged();
     }
 
-    /// [TODO 변경 사항 반영하고 화면 나가기]
+    /// todo 변경 사항 반영하고 화면 나가기
     Future<void> saveAndPop() async {
       final updated = toDo.copyWith(
         title: titleController.text,
         description: detailController.text.isEmpty ? null : detailController.text,
         isFavorite: fav.value,
-        deadLine: due.value,
+        deadLine: deadLine.value,
       );
 
-      await vm.updateToDo(updated);
+      ref.read(homePageViewModelProvider.notifier).updateToDo(updated);
       if (context.mounted) Navigator.pop(context);
     }
 
-    /// [TODO 삭제 후 나가기]
+    /// todo 삭제 후 나가기
     Future<void> deleteAndPop() async {
       final result = await showDeleteDialog();
       if (!result) return;
 
-      await vm.deleteToDo(toDo.id);
+      ref.read(homePageViewModelProvider.notifier).deleteToDo(toDo.id);
       if (context.mounted) Navigator.pop(context);
     }
 
-    /// [그냥 화면 나가기]
+    /// 그냥 화면 나가기
     void discardAndPop() {
       Navigator.pop(context);
     }
@@ -188,10 +179,10 @@ class ToDoDetailPage extends HookConsumerWidget {
             child: ToDoDetailView(
               titleController: titleController,
               detailController: detailController,
-              due: due.value,
-              onPickDue: pickDue,
+              deadLine: deadLine.value,
+              onPickDue: pickDeadLine,
               onClearDue: () {
-                due.value = null;
+                deadLine.value = null;
                 markEditIfChanged();
               },
             ),

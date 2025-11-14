@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tasks/data/model/to_do_entity.dart';
+import 'package:tasks/ui/home/viewmodel/home_page_view_model.dart';
 
-class AddToDoBottomSheetView extends HookWidget {
-  /// 새 TODO 추가하는 BottomSheet
-  const AddToDoBottomSheetView({super.key, required this.onAddToDo});
-
-  /// [콜백 메소드]
-  final void Function(String title, String? description, bool isFavorite, bool isDone) onAddToDo;
+class AddToDoBottomSheetView extends HookConsumerWidget {
+  /// 새 todo 추가하는 BottomSheet
+  const AddToDoBottomSheetView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final titleController = useTextEditingController();
     final detailController = useTextEditingController();
 
@@ -19,19 +19,20 @@ class AddToDoBottomSheetView extends HookWidget {
     // 수정 시 리빌드
     useListenable(titleController);
 
-    /// [TODO 저장]
+    /// todo 저장
     void saveToDo() {
       final title = titleController.text.trim();
       final detail = showDetail.value ? detailController.text.trim() : null;
       if (title.isNotEmpty) {
-        onAddToDo(title, detail, star.value, false);
+        ref
+            .read(homePageViewModelProvider.notifier)
+            .addToDo(ToDoEntity(id: '', title: title, description: detail, isFavorite: star.value, isDone: false));
         Navigator.of(context).pop();
       }
     }
 
     return Container(
       padding: EdgeInsets.fromLTRB(20, 12, 20, MediaQuery.of(context).viewInsets.bottom),
-
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -72,7 +73,6 @@ class AddToDoBottomSheetView extends HookWidget {
                 icon: Icon(Icons.short_text_rounded, color: Theme.of(context).dividerColor, size: 24),
               ),
               SizedBox(width: 20),
-
               // 즐겨찾기 토글 버튼
               IconButton(
                 onPressed: () => {star.value = !star.value},
@@ -83,7 +83,6 @@ class AddToDoBottomSheetView extends HookWidget {
                 ),
               ),
               Spacer(),
-
               // 저장 버튼
               TextButton(
                 onPressed: titleController.text.isNotEmpty ? saveToDo : null,

@@ -12,10 +12,11 @@ class ToDoRepositoryImpl implements ToDoRepository {
 
   @override
   Future<ToDoEntity> addToDo(ToDoEntity toDo) async {
-    final json = toDo.toJson();
     // 서버 시간 사용
-    json['created_at'] = toDo.createdAt ?? FieldValue.serverTimestamp();
-    final ref = await firestore.collection('todo').add(json);
+    final ref = await firestore.collection('todo').add({
+      ...toDo.toJson(),
+      'created_at': toDo.createdAt ?? FieldValue.serverTimestamp(),
+    });
     return toDo.copyWith(id: ref.id);
   }
 
