@@ -5,14 +5,14 @@ class ToDoDetailView extends StatelessWidget {
     super.key,
     required this.titleController,
     required this.detailController,
-    required this.due,
+    required this.deadLine,
     required this.onPickDue,
     required this.onClearDue,
   });
 
   final TextEditingController titleController;
   final TextEditingController detailController;
-  final DateTime? due;
+  final DateTime? deadLine;
   final VoidCallback onPickDue;
   final VoidCallback onClearDue;
 
@@ -35,11 +35,7 @@ class ToDoDetailView extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 13),
-              child: Icon(
-                Icons.short_text_rounded,
-                color: Theme.of(context).dividerColor,
-                size: 30,
-              ),
+              child: Icon(Icons.short_text_rounded, color: Theme.of(context).dividerColor, size: 30),
             ),
             const SizedBox(width: 15),
             Expanded(
@@ -49,10 +45,7 @@ class ToDoDetailView extends StatelessWidget {
                   controller: detailController,
                   maxLines: null,
                   minLines: 1,
-                  decoration: const InputDecoration(
-                    hintText: '세부 내용을 입력하세요',
-                    border: InputBorder.none,
-                  ),
+                  decoration: const InputDecoration(hintText: '세부 내용을 입력하세요', border: InputBorder.none),
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
@@ -67,35 +60,22 @@ class ToDoDetailView extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Icon(
-                Icons.schedule,
-                color: Theme.of(context).dividerColor,
-                size: 30,
-              ),
+              child: Icon(Icons.schedule, color: Theme.of(context).dividerColor, size: 30),
             ),
             const SizedBox(width: 16),
-            if (due != null)
+            if (deadLine != null)
               Container(
                 decoration: ShapeDecoration(
-                  shape: StadiumBorder(
-                    side: BorderSide(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
-                  ),
+                  shape: StadiumBorder(side: BorderSide(color: Theme.of(context).colorScheme.outline)),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 6,
-                    bottom: 6,
-                    left: 18,
-                    right: 12,
-                  ),
+                  padding: const EdgeInsets.only(top: 6, bottom: 6, left: 18, right: 12),
                   child: Row(
                     children: [
                       GestureDetector(
                         onTap: onPickDue,
                         child: Text(
-                          '${due!.year}년 ${due!.month}월 ${due!.day}일 (${['월', '화', '수', '목', '금', '토', '일'][due!.weekday - 1]})',
+                          '${deadLine!.year}년 ${deadLine!.month}월 ${deadLine!.day}일 (${['월', '화', '수', '목', '금', '토', '일'][deadLine!.weekday - 1]})',
                           style: TextStyle(
                             color: Theme.of(context).dividerColor,
                             fontSize: 15,
@@ -111,11 +91,7 @@ class ToDoDetailView extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                           onPressed: onClearDue,
-                          icon: Icon(
-                            Icons.close,
-                            color: Theme.of(context).dividerColor,
-                            size: 18,
-                          ),
+                          icon: Icon(Icons.close, color: Theme.of(context).dividerColor, size: 18),
                         ),
                       ),
                     ],
@@ -129,11 +105,7 @@ class ToDoDetailView extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     '날짜/시간 추가',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).hintColor,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Theme.of(context).hintColor),
                   ),
                 ),
               ),
