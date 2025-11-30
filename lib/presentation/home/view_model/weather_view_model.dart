@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tasks/data/model/weather_entity.dart';
-import 'package:tasks/data/repositories/weather_repository_impl.dart';
+import 'package:tasks/application/config/dependencies.dart';
+import 'package:tasks/domain/entities/weather_entity.dart';
 
 part 'weather_view_model.g.dart';
 

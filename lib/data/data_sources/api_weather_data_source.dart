@@ -11,7 +11,7 @@ abstract class ApiWeatherDataSource {
 }
 
 class ApiWeatherDataSourceImpl implements ApiWeatherDataSource {
-  /// ApiWeatherDataSource 구현체 (DIP 준수)
+  /// ApiWeatherDataSource 구현체
   ApiWeatherDataSourceImpl({required this.client});
 
   final http.Client client;

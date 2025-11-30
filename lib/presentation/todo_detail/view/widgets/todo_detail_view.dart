@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ToDoDetailView extends StatelessWidget {
-  const ToDoDetailView({
+class TodoDetailView extends StatelessWidget {
+  const TodoDetailView({
     super.key,
     required this.titleController,
     required this.detailController,
@@ -35,7 +35,11 @@ class ToDoDetailView extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 13),
-              child: Icon(Icons.short_text_rounded, color: Theme.of(context).dividerColor, size: 30),
+              child: Icon(
+                Icons.short_text_rounded,
+                color: Theme.of(context).dividerColor,
+                size: 30,
+              ),
             ),
             const SizedBox(width: 15),
             Expanded(
@@ -45,7 +49,10 @@ class ToDoDetailView extends StatelessWidget {
                   controller: detailController,
                   maxLines: null,
                   minLines: 1,
-                  decoration: const InputDecoration(hintText: '세부 내용을 입력하세요', border: InputBorder.none),
+                  decoration: const InputDecoration(
+                    hintText: '세부 내용을 입력하세요',
+                    border: InputBorder.none,
+                  ),
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
@@ -66,7 +73,9 @@ class ToDoDetailView extends StatelessWidget {
             if (deadLine != null)
               Container(
                 decoration: ShapeDecoration(
-                  shape: StadiumBorder(side: BorderSide(color: Theme.of(context).colorScheme.outline)),
+                  shape: StadiumBorder(
+                    side: BorderSide(color: Theme.of(context).colorScheme.outline),
+                  ),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 6, bottom: 6, left: 18, right: 12),
@@ -105,7 +114,11 @@ class ToDoDetailView extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     '날짜/시간 추가',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Theme.of(context).hintColor),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).hintColor,
+                    ),
                   ),
                 ),
               ),

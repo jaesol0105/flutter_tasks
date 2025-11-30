@@ -5,7 +5,10 @@ import 'package:http/http.dart' as http;
 // 임포트 순서 DataSourse -> Repository -> Usecase 순서로
 import 'package:tasks/data/data_sources/firestore_todo_data_source.dart';
 import 'package:tasks/data/data_sources/api_weather_data_source.dart';
+import 'package:tasks/data/repositories/todo_repository_impl.dart';
+import 'package:tasks/data/repositories/weather_repository_impl.dart';
 import 'package:tasks/domain/repositories/todo_repository.dart';
+import 'package:tasks/domain/repositories/weather_repository.dart';
 
 part 'dependencies.g.dart';
 
@@ -26,4 +29,10 @@ ApiWeatherDataSource apiWeatherDataSource(Ref ref) {
 TodoRepository todoRepository(Ref ref) {
   final dataSource = ref.watch(firestoreTodoDataSourceProvider);
   return TodoRepositoryImpl(dataSource: dataSource);
+}
+
+@Riverpod(keepAlive: true)
+WeatherRepository weatherRepository(Ref ref) {
+  final dataSource = ref.watch(apiWeatherDataSourceProvider);
+  return WeatherRepositoryImpl(dataSource: dataSource);
 }

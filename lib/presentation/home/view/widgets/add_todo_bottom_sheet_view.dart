@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tasks/data/model/to_do_entity.dart';
+import 'package:tasks/domain/entities/todo_entity.dart';
 import 'package:tasks/presentation/home/view_model/home_page_view_model.dart';
 
-class AddToDoBottomSheetView extends HookConsumerWidget {
+class AddTodoBottomSheetView extends HookConsumerWidget {
   /// 새 todo 추가하는 BottomSheet
-  const AddToDoBottomSheetView({super.key});
+  const AddTodoBottomSheetView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,14 +20,14 @@ class AddToDoBottomSheetView extends HookConsumerWidget {
     useListenable(titleController);
 
     /// todo 저장
-    void saveToDo() {
+    void saveTodo() {
       final title = titleController.text.trim();
       final detail = showDetail.value ? detailController.text.trim() : null;
       if (title.isNotEmpty) {
         ref
             .read(homePageViewModelProvider.notifier)
-            .addToDo(
-              ToDoEntity(
+            .addTodo(
+              TodoEntity(
                 id: '',
                 title: title,
                 description: detail,
@@ -48,7 +48,7 @@ class AddToDoBottomSheetView extends HookConsumerWidget {
           TextField(
             maxLines: 1,
             textInputAction: TextInputAction.done,
-            onSubmitted: (_) => saveToDo(),
+            onSubmitted: (_) => saveTodo(),
             autofocus: true,
             controller: titleController,
             decoration: InputDecoration(
@@ -97,7 +97,7 @@ class AddToDoBottomSheetView extends HookConsumerWidget {
               Spacer(),
               // 저장 버튼
               TextButton(
-                onPressed: titleController.text.isNotEmpty ? saveToDo : null,
+                onPressed: titleController.text.isNotEmpty ? saveTodo : null,
                 child: Text(
                   '저장',
                   style: TextStyle(

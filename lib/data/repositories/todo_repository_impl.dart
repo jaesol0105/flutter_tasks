@@ -4,7 +4,7 @@ import 'package:tasks/domain/repositories/todo_repository.dart';
 import 'package:tasks/data/mappers/todo_mapper.dart';
 
 class TodoRepositoryImpl implements TodoRepository {
-  /// TodoRepository 구현체 (DIP 준수)
+  /// TodoRepository 구현체
   TodoRepositoryImpl({required this.dataSource});
 
   final FirestoreTodoDataSource dataSource;

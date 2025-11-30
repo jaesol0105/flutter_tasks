@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tasks/data/model/to_do_entity.dart';
+import 'package:tasks/domain/entities/todo_entity.dart';
 import 'package:tasks/presentation/home/view_model/home_page_view_model.dart';
-import 'package:tasks/presentation/to_do_detail/view/to_do_detail_page.dart';
+import 'package:tasks/presentation/todo_detail/view/todo_detail_page.dart';
 
-class ToDoView extends ConsumerWidget {
+class TodoView extends ConsumerWidget {
   /// todo item 뷰
-  const ToDoView({super.key, required this.toDo});
+  const TodoView({super.key, required this.todo});
 
-  final ToDoEntity toDo;
+  final TodoEntity todo;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,29 +22,29 @@ class ToDoView extends ConsumerWidget {
       child: GestureDetector(
         onTap: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ToDoDetailPage(toDo: toDo)),
+          MaterialPageRoute(builder: (context) => TodoDetailPage(todo: todo)),
         ),
         child: Container(
           color: Colors.transparent, // Spacer 부분에도 터치 가능하게 한다
           child: Row(
             children: [
               IconButton(
-                onPressed: () => ref.read(homePageViewModelProvider.notifier).toggleDone(toDo.id),
-                icon: Icon(toDo.isDone ? Icons.check_circle : Icons.circle_outlined),
+                onPressed: () => ref.read(homePageViewModelProvider.notifier).toggleDone(todo.id),
+                icon: Icon(todo.isDone ? Icons.check_circle : Icons.circle_outlined),
               ),
               SizedBox(width: 12),
               Text(
-                toDo.title,
+                todo.title,
                 style: TextStyle(
-                  decoration: toDo.isDone ? TextDecoration.lineThrough : null,
+                  decoration: todo.isDone ? TextDecoration.lineThrough : null,
                   decorationThickness: 2,
                 ),
               ),
               Spacer(),
               IconButton(
                 onPressed: () =>
-                    ref.read(homePageViewModelProvider.notifier).toggleFavorite(toDo.id),
-                icon: Icon(toDo.isFavorite ? Icons.star : Icons.star_border),
+                    ref.read(homePageViewModelProvider.notifier).toggleFavorite(todo.id),
+                icon: Icon(todo.isFavorite ? Icons.star : Icons.star_border),
               ),
             ],
           ),

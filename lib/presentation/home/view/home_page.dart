@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:tasks/data/model/to_do_entity.dart';
-import 'package:tasks/presentation/home/view/widgets/add_to_do_bottom_sheet_view.dart';
+import 'package:tasks/domain/entities/todo_entity.dart';
+import 'package:tasks/presentation/home/view/widgets/add_todo_bottom_sheet_view.dart';
 import 'package:tasks/presentation/home/view/widgets/empty_view.dart';
-import 'package:tasks/presentation/home/view/widgets/to_do_view.dart';
+import 'package:tasks/presentation/home/view/widgets/todo_view.dart';
 import 'package:tasks/presentation/home/view/widgets/weather_bottom_view.dart';
 
 import 'package:tasks/presentation/home/view_model/home_page_view_model.dart';
@@ -32,7 +32,7 @@ class HomePage extends ConsumerWidget {
                 separatorBuilder: (BuildContext context, int index) => SizedBox(height: 0),
                 itemCount: toDoList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  ToDoEntity item = toDoList[index];
+                  TodoEntity item = toDoList[index];
 
                   // 아이템 밀어서 삭제하기
                   return Dismissible(
@@ -49,7 +49,7 @@ class HomePage extends ConsumerWidget {
                       final messenger = ScaffoldMessenger.of(context);
                       final removedItem = await ref
                           .read(homePageViewModelProvider.notifier)
-                          .deleteToDo(item.id);
+                          .deleteTodo(item.id);
 
                       // 되돌리기 스낵바
                       messenger.showSnackBar(
@@ -59,7 +59,7 @@ class HomePage extends ConsumerWidget {
                             label: '되돌리기',
                             onPressed: () {
                               if (removedItem == null) return;
-                              ref.read(homePageViewModelProvider.notifier).addToDo(removedItem);
+                              ref.read(homePageViewModelProvider.notifier).addTodo(removedItem);
                             },
                           ),
                         ),
@@ -67,7 +67,7 @@ class HomePage extends ConsumerWidget {
                     },
 
                     // 아이템 뷰
-                    child: ToDoView(toDo: item),
+                    child: TodoView(todo: item),
                   );
                 },
               ),
@@ -83,7 +83,7 @@ class HomePage extends ConsumerWidget {
             context: context,
             isScrollControlled: true,
             builder: (context) {
-              return AddToDoBottomSheetView();
+              return AddTodoBottomSheetView();
             },
           );
         },

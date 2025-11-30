@@ -4,7 +4,7 @@ import 'package:tasks/domain/repositories/weather_repository.dart';
 import 'package:tasks/data/mappers/weather_mapper.dart';
 
 class WeatherRepositoryImpl implements WeatherRepository {
-  /// WeatherRepository 구현체 (DIP 준수)
+  /// WeatherRepository 구현체
   WeatherRepositoryImpl({required this.dataSource});
 
   final ApiWeatherDataSource dataSource;

@@ -1,26 +1,26 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tasks/data/dto/todo_dto.dart';
+import 'package:tasks/application/config/dependencies.dart';
+import 'package:tasks/domain/entities/todo_entity.dart';
 import 'package:tasks/domain/repositories/todo_repository.dart';
-import 'package:tasks/data/repositories/to_do_repository_impl.dart';
 
 part 'home_page_view_model.g.dart';
 
 @riverpod
 class HomePageViewModel extends _$HomePageViewModel {
-  TodoRepository get repo => ref.read(toDoRepositoryProvider);
+  TodoRepository get repo => ref.read(todoRepositoryProvider);
 
   @override
-  Future<List<ToDoEntity>> build() async {
+  Future<List<TodoEntity>> build() async {
     return await repo.getTodos();
   }
 
   /// todo 추가
-  Future<void> addToDo(ToDoEntity todo) async {
+  Future<void> addTodo(TodoEntity todo) async {
     final list = state.value;
     if (list == null) return;
 
     try {
-      final created = await repo.addTodo(todo); // 문서 ID state에 반영 -> UUID로 바꿀까..
+      final created = await repo.addTodo(todo);
       state = AsyncData([...list, created]);
     } catch (e, stack) {
       state = AsyncError(e, stack);
@@ -28,13 +28,13 @@ class HomePageViewModel extends _$HomePageViewModel {
   }
 
   /// todo 수정
-  Future<void> updateToDo(ToDoEntity todo) async {
+  Future<void> updateTodo(TodoEntity todo) async {
     final list = state.value;
     if (list == null) return;
-
+    // UI 업데이트에 사용되야하니까 뷰모델에 놔두는게 맞나..?
     final idx = list.indexWhere((e) => e.id == todo.id);
     if (idx < 0) return;
-
+    // 낙관적 업데이트
     state = AsyncData([...list]..[idx] = todo);
     try {
       await repo.updateTodo(todo);
@@ -44,7 +44,7 @@ class HomePageViewModel extends _$HomePageViewModel {
   }
 
   /// todo 삭제
-  Future<ToDoEntity?> deleteToDo(String id) async {
+  Future<TodoEntity?> deleteTodo(String id) async {
     final list = state.value;
     if (list == null) return null;
 

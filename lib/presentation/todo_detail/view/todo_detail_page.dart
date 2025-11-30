@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tasks/data/model/to_do_entity.dart';
 import 'package:tasks/application/enums/action_enums.dart';
+import 'package:tasks/domain/entities/todo_entity.dart';
 import 'package:tasks/presentation/home/view_model/home_page_view_model.dart';
-import 'package:tasks/presentation/to_do_detail/view/widgets/to_do_detail_view.dart';
+import 'package:tasks/presentation/todo_detail/view/widgets/todo_detail_view.dart';
 
-class ToDoDetailPage extends HookConsumerWidget {
-  const ToDoDetailPage({super.key, required this.toDo});
+class TodoDetailPage extends HookConsumerWidget {
+  const TodoDetailPage({super.key, required this.todo});
 
-  final ToDoEntity toDo;
+  final TodoEntity todo;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final titleController = useTextEditingController(text: toDo.title);
-    final detailController = useTextEditingController(text: toDo.description ?? "");
+    final titleController = useTextEditingController(text: todo.title);
+    final detailController = useTextEditingController(text: todo.description ?? "");
 
-    final fav = useState<bool>(toDo.isFavorite); // 북마크 상태
-    final deadLine = useState<DateTime?>(toDo.deadLine); // 마감일 상태
+    final fav = useState<bool>(todo.isFavorite); // 북마크 상태
+    final deadLine = useState<DateTime?>(todo.deadLine); // 마감일 상태
     final isEdit = useState<bool>(false); // 변경 여부
 
     /// 변경 여부 체크 - 제목/내용/북마크/마감일
     void markEditIfChanged() {
       final changed =
-          titleController.text != toDo.title ||
-          detailController.text != (toDo.description ?? "") ||
-          fav.value != toDo.isFavorite ||
-          deadLine.value != toDo.deadLine;
+          titleController.text != todo.title ||
+          detailController.text != (todo.description ?? "") ||
+          fav.value != todo.isFavorite ||
+          deadLine.value != todo.deadLine;
       isEdit.value = changed;
     }
 
@@ -138,14 +138,14 @@ class ToDoDetailPage extends HookConsumerWidget {
 
     /// todo 변경 사항 반영하고 화면 나가기
     Future<void> saveAndPop() async {
-      final updated = toDo.copyWith(
+      final updated = todo.copyWith(
         title: titleController.text,
         description: detailController.text.isEmpty ? null : detailController.text,
         isFavorite: fav.value,
         deadLine: deadLine.value,
       );
 
-      ref.read(homePageViewModelProvider.notifier).updateToDo(updated);
+      ref.read(homePageViewModelProvider.notifier).updateTodo(updated);
       if (context.mounted) Navigator.pop(context);
     }
 
@@ -154,7 +154,7 @@ class ToDoDetailPage extends HookConsumerWidget {
       final result = await showDeleteDialog();
       if (!result) return;
 
-      ref.read(homePageViewModelProvider.notifier).deleteToDo(toDo.id);
+      ref.read(homePageViewModelProvider.notifier).deleteTodo(todo.id);
       if (context.mounted) Navigator.pop(context);
     }
 
@@ -203,7 +203,7 @@ class ToDoDetailPage extends HookConsumerWidget {
         body: Padding(
           padding: const EdgeInsets.all(15),
           child: SingleChildScrollView(
-            child: ToDoDetailView(
+            child: TodoDetailView(
               titleController: titleController,
               detailController: detailController,
               deadLine: deadLine.value,

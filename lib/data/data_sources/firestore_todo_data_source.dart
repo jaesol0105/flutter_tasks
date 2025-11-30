@@ -17,7 +17,7 @@ abstract class FirestoreTodoDataSource {
 }
 
 class FirestoreTodoDataSourceImpl implements FirestoreTodoDataSource {
-  /// FirestoreTodoDataSource 구현체 (DIP 준수)
+  /// FirestoreTodoDataSource 구현체
   FirestoreTodoDataSourceImpl({required this.firestore});
 
   final FirebaseFirestore firestore;
