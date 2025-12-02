@@ -13,7 +13,7 @@ part of 'home_page_view_model.dart';
 const homePageViewModelProvider = HomePageViewModelProvider._();
 
 final class HomePageViewModelProvider
-    extends $AsyncNotifierProvider<HomePageViewModel, List<TodoEntity>> {
+    extends $AsyncNotifierProvider<HomePageViewModel, TodoListState> {
   const HomePageViewModelProvider._()
     : super(
         from: null,
@@ -33,21 +33,20 @@ final class HomePageViewModelProvider
   HomePageViewModel create() => HomePageViewModel();
 }
 
-String _$homePageViewModelHash() => r'56d05460dc6f9af39011dc1d59787f92cdd0d15b';
+String _$homePageViewModelHash() => r'372b4eb7e23e15be7bbdcdd4e31ee8e8f09ed80b';
 
-abstract class _$HomePageViewModel extends $AsyncNotifier<List<TodoEntity>> {
-  FutureOr<List<TodoEntity>> build();
+abstract class _$HomePageViewModel extends $AsyncNotifier<TodoListState> {
+  FutureOr<TodoListState> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref =
-        this.ref as $Ref<AsyncValue<List<TodoEntity>>, List<TodoEntity>>;
+    final ref = this.ref as $Ref<AsyncValue<TodoListState>, TodoListState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<TodoEntity>>, List<TodoEntity>>,
-              AsyncValue<List<TodoEntity>>,
+              AnyNotifier<AsyncValue<TodoListState>, TodoListState>,
+              AsyncValue<TodoListState>,
               Object?,
               Object?
             >;

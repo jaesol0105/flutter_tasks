@@ -4,7 +4,7 @@ import 'package:tasks/domain/entities/todo_entity.dart';
 /// WeatherDTO와 WeatherEntity 간 변환 매퍼
 class TodoMapper {
   /// TodoDTO를 TodoEntity로 변환
-  static TodoEntity toEntity(TodoDTO dto) => TodoEntity(
+  static TodoEntity toDomain(TodoDTO dto) => TodoEntity(
     id: dto.id,
     title: dto.title,
     description: dto.description,
