@@ -33,7 +33,7 @@ final class HomePageViewModelProvider
   HomePageViewModel create() => HomePageViewModel();
 }
 
-String _$homePageViewModelHash() => r'372b4eb7e23e15be7bbdcdd4e31ee8e8f09ed80b';
+String _$homePageViewModelHash() => r'6779afe66a3d3ac86cce18cfd9a918b6904c19e8';
 
 abstract class _$HomePageViewModel extends $AsyncNotifier<TodoListState> {
   FutureOr<TodoListState> build();

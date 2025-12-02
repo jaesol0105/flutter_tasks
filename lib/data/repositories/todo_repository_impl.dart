@@ -30,7 +30,7 @@ class TodoRepositoryImpl implements TodoRepository {
   @override
   Future<List<TodoEntity>> getTodos({required int limit, DateTime? lastCreatedAt}) async {
     final dtoList = await dataSource.getTodos(limit: limit, lastCreatedAt: lastCreatedAt);
-    print('🌟${dtoList.length} 🌖${dtoList}');
+    print('🌟${dtoList.length} 🌖${dtoList}'); // 무한 스크롤 로그
     return dtoList.map((dto) => TodoMapper.toDomain(dto)).toList();
   }
 }
