@@ -5,7 +5,9 @@ import 'package:tasks/application/enums/action_enums.dart';
 import 'package:tasks/application/utils/debouncer.dart';
 import 'package:tasks/domain/entities/todo_entity.dart';
 import 'package:tasks/presentation/home/view_model/home_page_view_model.dart';
+import 'package:tasks/presentation/todo_detail/view/widgets/todo_detail_dialogs.dart';
 import 'package:tasks/presentation/todo_detail/view/widgets/todo_detail_view.dart';
+import 'package:tasks/presentation/todo_detail/view_model/todo_detail_view_model.dart';
 
 class TodoDetailPage extends HookConsumerWidget {
   const TodoDetailPage({super.key, required this.todo});
@@ -18,94 +20,31 @@ class TodoDetailPage extends HookConsumerWidget {
     final titleController = useTextEditingController(text: todo.title);
     final detailController = useTextEditingController(text: todo.description ?? "");
 
-    final fav = useState<bool>(todo.isFavorite); // 북마크 상태
-    final deadLine = useState<DateTime?>(todo.deadLine); // 마감일 상태
-    final isEdit = useState<bool>(false); // 변경 여부
+    // ViewModel 상태 (비즈니스 로직)
+    final state = ref.watch(todoDetailViewModelProvider(todo));
 
-    /// 변경 여부 체크 - 제목/내용/북마크/마감일
-    void markEditIfChanged() {
-      final changed =
-          titleController.text != todo.title ||
-          detailController.text != (todo.description ?? "") ||
-          fav.value != todo.isFavorite ||
-          deadLine.value != todo.deadLine;
-      isEdit.value = changed;
+    /// 변경 여부 체크
+    void checkIfEdited() {
+      ref
+          .read(todoDetailViewModelProvider(todo).notifier)
+          .checkIfEdited(title: titleController.text, description: detailController.text);
     }
 
-    /// 변경 여부를 체크하는 디바운서
+    /// 디바운서 설정
     final debouncer = useMemoized(
-      () => Debouncer(duration: const Duration(milliseconds: 300), callback: markEditIfChanged),
+      () => Debouncer(duration: const Duration(milliseconds: 300), callback: checkIfEdited),
     );
 
     /// textController 리스너 연결
     useEffect(() {
       void debouncedCheck() => debouncer.run();
-      // 디바운싱 적용
+      // 변경 사항 체크 - 디바운싱 적용
       titleController.addListener(debouncedCheck);
       detailController.addListener(debouncedCheck);
       return () {
         debouncer.dispose();
       };
     }, []);
-
-    /// 경고 스낵바 출력
-    void showSnackBar(String text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(text, style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-    }
-
-    /// todo 저장 경고 대화상자 출력
-    Future<LeaveAction?> showLeaveDialog(BuildContext context) async {
-      final action = await showDialog<LeaveAction>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('변경사항이 있어요'),
-          content: const Text('저장하고 나갈까요?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, LeaveAction.cancel),
-              child: const Text('취소'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, LeaveAction.discard),
-              child: const Text('저장 안 함'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, LeaveAction.save),
-              child: const Text('저장'),
-            ),
-          ],
-        ),
-      );
-      return action;
-    }
-
-    /// todo 삭제 경고 대화상자 출력
-    Future<bool> showDeleteDialog() async {
-      final action = await showDialog<DeleteAction>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('할 일을 삭제할까요?'),
-          content: const Text('삭제 후엔 복구할 수 없어요.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, DeleteAction.cancel),
-              child: const Text('취소'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, DeleteAction.done),
-              child: const Text('삭제'),
-            ),
-          ],
-        ),
-      );
-
-      return action == DeleteAction.done;
-    }
 
     /// todo 마감일 설정
     Future<void> pickDeadLine() async {
@@ -114,7 +53,7 @@ class TodoDetailPage extends HookConsumerWidget {
       // DatePicker
       final pickedDate = await showDatePicker(
         context: context,
-        initialDate: deadLine.value ?? now,
+        initialDate: state.deadLine ?? now,
         firstDate: now,
         lastDate: DateTime(now.year + 5),
       );
@@ -124,8 +63,8 @@ class TodoDetailPage extends HookConsumerWidget {
       final pickedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay(
-          hour: deadLine.value?.hour ?? now.hour,
-          minute: deadLine.value?.minute ?? now.minute,
+          hour: state.deadLine?.hour ?? now.hour,
+          minute: state.deadLine?.minute ?? now.minute,
         ),
       );
       if (pickedTime == null) return;
@@ -138,35 +77,24 @@ class TodoDetailPage extends HookConsumerWidget {
         pickedTime.minute,
       );
 
-      deadLine.value = picked;
-      markEditIfChanged();
-    }
-
-    /// todo 북마크 토글
-    void toggleFavorite() {
-      fav.value = !fav.value;
-      markEditIfChanged();
+      ref.read(todoDetailViewModelProvider(todo).notifier).setDeadLine(picked);
+      checkIfEdited();
     }
 
     /// todo 변경 사항 반영하고 화면 나가기
     Future<void> saveAndPop() async {
-      final updated = todo.copyWith(
-        title: titleController.text,
-        description: detailController.text.isEmpty ? null : detailController.text,
-        isFavorite: fav.value,
-        deadLine: deadLine.value,
-      );
-
-      ref.read(homePageViewModelProvider.notifier).updateTodo(updated);
+      await ref
+          .read(todoDetailViewModelProvider(todo).notifier)
+          .saveTodo(title: titleController.text, description: detailController.text);
       if (context.mounted) Navigator.pop(context);
     }
 
     /// todo 삭제 후 나가기
     Future<void> deleteAndPop() async {
-      final result = await showDeleteDialog();
+      final result = await TodoDetailDialogs.showDeleteDialog(context);
       if (!result) return;
 
-      ref.read(homePageViewModelProvider.notifier).deleteTodo(todo.id);
+      await ref.read(todoDetailViewModelProvider(todo).notifier).deleteTodo();
       if (context.mounted) Navigator.pop(context);
     }
 
@@ -177,16 +105,16 @@ class TodoDetailPage extends HookConsumerWidget {
 
     return PopScope(
       // 뒤로 가기 처리
-      canPop: !isEdit.value, // 변경 없으면 true, 변경 있으면 false
+      canPop: !state.isEdited, // 변경 없으면 true, 변경 있으면 false
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         if (titleController.text.isEmpty) {
           // 제목이 비어있으면 스낵바 출력
-          showSnackBar('제목을 입력해주세요.');
+          TodoDetailDialogs.showErrorSnackBar(context, '제목을 입력해주세요.');
           return;
         }
 
-        LeaveAction? action = await showLeaveDialog(context);
+        LeaveAction? action = await TodoDetailDialogs.showLeaveDialog(context);
         switch (action) {
           case LeaveAction.save:
             await saveAndPop();
@@ -204,10 +132,13 @@ class TodoDetailPage extends HookConsumerWidget {
         appBar: AppBar(
           leading: const BackButton(),
           actions: [
-            IconButton(icon: Icon(Icons.delete), onPressed: deleteAndPop),
+            IconButton(icon: const Icon(Icons.delete), onPressed: deleteAndPop),
             IconButton(
-              icon: fav.value ? Icon(Icons.star) : Icon(Icons.star_border),
-              onPressed: toggleFavorite,
+              icon: state.isFavorite ? const Icon(Icons.star) : const Icon(Icons.star_border),
+              onPressed: () {
+                ref.read(todoDetailViewModelProvider(todo).notifier).toggleFavorite();
+                checkIfEdited();
+              },
             ),
           ],
         ),
@@ -218,11 +149,11 @@ class TodoDetailPage extends HookConsumerWidget {
             child: TodoDetailView(
               titleController: titleController,
               detailController: detailController,
-              deadLine: deadLine.value,
+              deadLine: state.deadLine,
               onPickDue: pickDeadLine,
               onClearDue: () {
-                deadLine.value = null;
-                markEditIfChanged();
+                ref.read(todoDetailViewModelProvider(todo).notifier).clearDeadLine();
+                checkIfEdited();
               },
             ),
           ),

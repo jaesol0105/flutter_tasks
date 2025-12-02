@@ -8,15 +8,15 @@ part of 'providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// [반응형 UI - 테블릿/폴드] 선택된 todo 상태관리 프로바이더
+/// [반응형 UI - 테블릿/폴드] 선택된 todo 상태 관리 프로바이더
 
 @ProviderFor(SelectedTodo)
 const selectedTodoProvider = SelectedTodoProvider._();
 
-/// [반응형 UI - 테블릿/폴드] 선택된 todo 상태관리 프로바이더
+/// [반응형 UI - 테블릿/폴드] 선택된 todo 상태 관리 프로바이더
 final class SelectedTodoProvider
     extends $NotifierProvider<SelectedTodo, TodoEntity?> {
-  /// [반응형 UI - 테블릿/폴드] 선택된 todo 상태관리 프로바이더
+  /// [반응형 UI - 테블릿/폴드] 선택된 todo 상태 관리 프로바이더
   const SelectedTodoProvider._()
     : super(
         from: null,
@@ -46,7 +46,7 @@ final class SelectedTodoProvider
 
 String _$selectedTodoHash() => r'5063e77ff27527965812e0d2c1db7b3a242fd327';
 
-/// [반응형 UI - 테블릿/폴드] 선택된 todo 상태관리 프로바이더
+/// [반응형 UI - 테블릿/폴드] 선택된 todo 상태 관리 프로바이더
 
 abstract class _$SelectedTodo extends $Notifier<TodoEntity?> {
   TodoEntity? build();
