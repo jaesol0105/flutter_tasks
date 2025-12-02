@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tasks/application/enums/action_enums.dart';
+import 'package:tasks/application/utils/debouncer.dart';
 import 'package:tasks/domain/entities/todo_entity.dart';
 import 'package:tasks/presentation/home/view_model/home_page_view_model.dart';
 import 'package:tasks/presentation/todo_detail/view/widgets/todo_detail_view.dart';
@@ -31,10 +32,20 @@ class TodoDetailPage extends HookConsumerWidget {
       isEdit.value = changed;
     }
 
+    /// 변경 여부를 체크하는 디바운서
+    final debouncer = useMemoized(
+      () => Debouncer(duration: const Duration(milliseconds: 300), callback: markEditIfChanged),
+    );
+
     /// textController 리스너 연결
     useEffect(() {
-      titleController.addListener(markEditIfChanged);
-      detailController.addListener(markEditIfChanged);
+      void debouncedCheck() => debouncer.run();
+      // 디바운싱 적용
+      titleController.addListener(debouncedCheck);
+      detailController.addListener(debouncedCheck);
+      return () {
+        debouncer.dispose();
+      };
     }, []);
 
     /// 경고 스낵바 출력
