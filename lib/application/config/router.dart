@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tasks/application/config/page_transitions.dart';
 import 'package:tasks/domain/entities/todo_entity.dart';
 import 'package:tasks/presentation/home/view/home_page.dart';
 import 'package:tasks/presentation/todo_detail/view/todo_detail_page.dart';
@@ -18,9 +19,12 @@ final router = GoRouter(
         GoRoute(
           path: TodoDetailPage.path,
           name: 'todoDetail',
-          builder: (context, state) {
+          pageBuilder: (context, state) {
             final todo = state.extra as TodoEntity;
-            return TodoDetailPage(todo: todo);
+            return PageTransitions.slideTransition(
+              key: state.pageKey,
+              child: TodoDetailPage(todo: todo),
+            );
           },
         ),
       ],
