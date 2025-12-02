@@ -11,5 +11,5 @@ abstract class TodoRepository {
   Future<void> deleteTodo(String id);
 
   /// Todo 목록 조회
-  Future<List<TodoEntity>> getTodos();
+  Future<List<TodoEntity>> getTodos({required int limit, DateTime? lastCreatedAt});
 }

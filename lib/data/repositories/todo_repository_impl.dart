@@ -13,7 +13,7 @@ class TodoRepositoryImpl implements TodoRepository {
   Future<TodoEntity> addTodo(TodoEntity entity) async {
     final dto = TodoMapper.toDTO(entity);
     final addedDto = await dataSource.addTodo(dto);
-    return TodoMapper.toEntity(addedDto);
+    return TodoMapper.toDomain(addedDto);
   }
 
   @override
@@ -28,8 +28,9 @@ class TodoRepositoryImpl implements TodoRepository {
   }
 
   @override
-  Future<List<TodoEntity>> getTodos() async {
-    final dtoList = await dataSource.getTodos();
-    return dtoList.map((dto) => TodoMapper.toEntity(dto)).toList();
+  Future<List<TodoEntity>> getTodos({required int limit, DateTime? lastCreatedAt}) async {
+    final dtoList = await dataSource.getTodos(limit: limit, lastCreatedAt: lastCreatedAt);
+    print('🌟${dtoList.length} 🌖${dtoList}');
+    return dtoList.map((dto) => TodoMapper.toDomain(dto)).toList();
   }
 }
