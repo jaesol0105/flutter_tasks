@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tasks/data/dto/todo_dto.dart';
 
@@ -24,36 +26,72 @@ class FirestoreTodoDataSourceImpl implements FirestoreTodoDataSource {
 
   @override
   Future<TodoDTO> addTodo(TodoDTO todo) async {
-    final ref = await firestore.collection('todo').add({
-      ...todo.toJson(),
-      'created_at': todo.createdAt ?? FieldValue.serverTimestamp(), // 파이어베이스 서버 시간 사용
-    });
-    return todo.copyWith(id: ref.id);
+    try {
+      // 서버 시간 사용
+      final ref = await firestore.collection('todo').add({
+        ...todo.toJson(),
+        'created_at': todo.createdAt ?? FieldValue.serverTimestamp(), // 파이어베이스 서버 시간 사용
+      });
+      return todo.copyWith(id: ref.id);
+      // 예외 전파
+    } on FirebaseException catch (e, s) {
+      log('Firebase addTodo 실패: ${e.message}', error: e, stackTrace: s);
+      rethrow;
+    } catch (e, s) {
+      log('알 수 없는 addTodo 실패: $e', error: e, stackTrace: s);
+      rethrow;
+    }
   }
 
   @override
   Future<void> updateTodo(TodoDTO todo) async {
-    await firestore.collection('todo').doc(todo.id).update(todo.toJson());
+    try {
+      await firestore.collection('todo').doc(todo.id).update(todo.toJson());
+      // 예외 전파
+    } on FirebaseException catch (e, s) {
+      log('Firebase updateTodo 실패: ${e.message}', error: e, stackTrace: s);
+      rethrow;
+    } catch (e, s) {
+      log('알 수 없는 updateTodo 실패: $e', error: e, stackTrace: s);
+      rethrow;
+    }
   }
 
   @override
   Future<void> deleteTodo(String id) async {
-    await firestore.collection('todo').doc(id).delete();
+    try {
+      await firestore.collection('todo').doc(id).delete();
+      // 예외 전파
+    } on FirebaseException catch (e, s) {
+      log('Firebase deleteTodo 실패: ${e.message}', error: e, stackTrace: s);
+      rethrow;
+    } catch (e, s) {
+      log('알 수 없는 deleteTodo 실패: $e', error: e, stackTrace: s);
+      rethrow;
+    }
   }
 
   @override
   Future<List<TodoDTO>> getTodos({required int limit, DateTime? lastCreatedAt}) async {
-    Query<Map<String, dynamic>> query = firestore
-        .collection('todo')
-        .orderBy('created_at', descending: false) // 오래된 순 정렬
-        .limit(limit);
+    try {
+      Query<Map<String, dynamic>> query = firestore
+          .collection('todo')
+          .orderBy('created_at', descending: false) // 오래된 순 정렬
+          .limit(limit);
 
-    // 커서 기반 페이지네이션 (마지막 createdAt 이후부터 limit 만큼 조회)
-    if (lastCreatedAt != null) {
-      query = query.startAfter([lastCreatedAt]);
+      // 커서 기반 페이지네이션 (마지막 createdAt 이후부터 limit 만큼 조회)
+      if (lastCreatedAt != null) {
+        query = query.startAfter([lastCreatedAt]);
+      }
+      final snapshot = await query.get();
+      return snapshot.docs.map((doc) => TodoDTO.fromJson({...doc.data(), 'id': doc.id})).toList();
+      // 예외 전파
+    } on FirebaseException catch (e, s) {
+      log('Firebase getTodos 실패: ${e.message}', error: e, stackTrace: s);
+      rethrow;
+    } catch (e, s) {
+      log('알 수 없는 getTodos 실패: $e', error: e, stackTrace: s);
+      rethrow;
     }
-
-    final snapshot = await query.get();
-    return snapshot.docs.map((doc) => TodoDTO.fromJson({...doc.data(), 'id': doc.id})).toList();
   }
 }

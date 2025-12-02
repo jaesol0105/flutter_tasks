@@ -16,7 +16,7 @@ class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   static const path = '/';
-  final title = "재솔's Tasks";
+  final title = "할 일을 미루지 말자.";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,6 +25,19 @@ class HomePage extends ConsumerWidget {
     final isWideScreen = context.isWideScreen; // [반응형 UI - 테블릿/폴드] 기기 가로 길이
     final isSplit =
         isWideScreen && selectedTodo != null; // [반응형 UI - 테블릿/폴드] 넓은 화면일 경우 todo 선택하면 분할 레이아웃
+
+    // 에러 리스너 - AsyncError 발생 시 스낵바 표시
+    ref.listen(homePageViewModelProvider, (previous, next) {
+      if (next is AsyncError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('작업을 처리할 수 없습니다: ${next.error}'),
+            backgroundColor: Colors.redAccent,
+            action: SnackBarAction(label: '확인', textColor: Colors.white, onPressed: () {}),
+          ),
+        );
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tasks/application/config/dependencies.dart';
@@ -38,8 +40,8 @@ class HomePageViewModel extends _$HomePageViewModel {
     if (currentState == null || !currentState.hasMore || currentState.isLoadingMore) {
       return;
     }
-
-    state = AsyncData(currentState.copyWith(isLoadingMore: true)); // 로딩 상태 설정
+    // 로딩 상태 설정
+    state = AsyncData(currentState.copyWith(isLoadingMore: true));
 
     try {
       final newTodos = await repo.getTodos(limit: _pageSize, lastCreatedAt: _lastCreatedAt);
@@ -54,7 +56,9 @@ class HomePageViewModel extends _$HomePageViewModel {
           isLoadingMore: false,
         ),
       );
+      // 예외 처리
     } catch (e, stack) {
+      log('ViewModel loadMore 실패: $e', error: e, stackTrace: stack);
       state = AsyncError(e, stack);
     }
   }
@@ -73,7 +77,9 @@ class HomePageViewModel extends _$HomePageViewModel {
       state = AsyncData(
         TodoListState(todos: todos, hasMore: todos.length >= _pageSize, isLoadingMore: false),
       );
+      // 예외 처리
     } catch (e, stack) {
+      log('ViewModel refresh 실패: $e', error: e, stackTrace: stack);
       state = AsyncError(e, stack);
     }
   }
@@ -86,7 +92,9 @@ class HomePageViewModel extends _$HomePageViewModel {
     try {
       final created = await repo.addTodo(todo); // 문서 ID state에 반영
       state = AsyncData(currentState.copyWith(todos: [...currentState.todos, created]));
+      // 예외 처리
     } catch (e, stack) {
+      log('ViewModel addTodo 실패: $e', error: e, stackTrace: stack);
       state = AsyncError(e, stack);
     }
   }
@@ -104,7 +112,9 @@ class HomePageViewModel extends _$HomePageViewModel {
     state = AsyncData(currentState.copyWith(todos: [...list]..[idx] = todo));
     try {
       await repo.updateTodo(todo);
+      // 예외 처리
     } catch (e, stack) {
+      log('ViewModel updateTodo 실패: $e', error: e, stackTrace: stack);
       state = AsyncError(e, stack);
     }
   }
@@ -123,7 +133,9 @@ class HomePageViewModel extends _$HomePageViewModel {
     state = AsyncData(currentState.copyWith(todos: [...list]..removeAt(idx)));
     try {
       await repo.deleteTodo(id);
+      // 예외 처리
     } catch (e, stack) {
+      log('ViewModel deleteTodo 실패: $e', error: e, stackTrace: stack);
       state = AsyncError(e, stack);
     }
     return prev;
@@ -142,7 +154,9 @@ class HomePageViewModel extends _$HomePageViewModel {
     state = AsyncData(currentState.copyWith(todos: [...list]..[idx] = updated));
     try {
       await repo.updateTodo(updated);
+      // 예외 처리
     } catch (e, stack) {
+      log('ViewModel toggleFavorite 실패: $e', error: e, stackTrace: stack);
       state = AsyncError(e, stack);
     }
   }
@@ -160,7 +174,9 @@ class HomePageViewModel extends _$HomePageViewModel {
     state = AsyncData(currentState.copyWith(todos: [...list]..[idx] = updated));
     try {
       await repo.updateTodo(updated);
+      // 예외 처리
     } catch (e, stack) {
+      log('ViewModel toggleDone 실패: $e', error: e, stackTrace: stack);
       state = AsyncError(e, stack);
     }
   }

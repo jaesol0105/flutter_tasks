@@ -83,19 +83,32 @@ class TodoDetailPage extends HookConsumerWidget {
 
     /// todo 변경 사항 반영하고 화면 나가기
     Future<void> saveAndPop() async {
-      await ref
-          .read(todoDetailViewModelProvider(todo).notifier)
-          .saveTodo(title: titleController.text, description: detailController.text);
-      if (context.mounted) Navigator.pop(context);
+      try {
+        await ref
+            .read(todoDetailViewModelProvider(todo).notifier)
+            .saveTodo(title: titleController.text, description: detailController.text);
+        if (context.mounted) Navigator.pop(context);
+        // 예외 전파 - 스낵바를 통해 사용자에게 표시
+      } catch (e) {
+        if (context.mounted) {
+          TodoDetailDialogs.showErrorSnackBar(context, '저장에 실패했습니다: $e');
+        }
+      }
     }
 
     /// todo 삭제 후 나가기
     Future<void> deleteAndPop() async {
       final result = await TodoDetailDialogs.showDeleteDialog(context);
       if (!result) return;
-
-      await ref.read(todoDetailViewModelProvider(todo).notifier).deleteTodo();
-      if (context.mounted) Navigator.pop(context);
+      try {
+        await ref.read(todoDetailViewModelProvider(todo).notifier).deleteTodo();
+        if (context.mounted) Navigator.pop(context);
+        // 예외 전파 - 스낵바를 통해 사용자에게 표시
+      } catch (e) {
+        if (context.mounted) {
+          TodoDetailDialogs.showErrorSnackBar(context, '삭제에 실패했습니다: $e');
+        }
+      }
     }
 
     /// 그냥 화면 나가기

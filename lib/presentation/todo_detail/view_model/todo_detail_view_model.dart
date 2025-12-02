@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tasks/domain/entities/todo_entity.dart';
@@ -57,18 +59,30 @@ class TodoDetailViewModel extends _$TodoDetailViewModel {
 
   /// Todo 저장
   Future<void> saveTodo({required String title, required String description}) async {
-    final updated = state.originalTodo.copyWith(
-      title: title,
-      description: description.isEmpty ? null : description,
-      isFavorite: state.isFavorite,
-      deadLine: state.deadLine,
-    );
+    try {
+      final updated = state.originalTodo.copyWith(
+        title: title,
+        description: description.isEmpty ? null : description,
+        isFavorite: state.isFavorite,
+        deadLine: state.deadLine,
+      );
 
-    await ref.read(homePageViewModelProvider.notifier).updateTodo(updated);
+      await ref.read(homePageViewModelProvider.notifier).updateTodo(updated);
+      // 예외 전파
+    } catch (e, s) {
+      log('DetailViewModel saveTodo 실패: $e', error: e, stackTrace: s);
+      rethrow;
+    }
   }
 
   /// Todo 삭제
   Future<void> deleteTodo() async {
-    await ref.read(homePageViewModelProvider.notifier).deleteTodo(state.originalTodo.id);
+    try {
+      await ref.read(homePageViewModelProvider.notifier).deleteTodo(state.originalTodo.id);
+      // 예외 전파
+    } catch (e, s) {
+      log('DetailViewModel deleteTodo 실패: $e', error: e, stackTrace: s);
+      rethrow;
+    }
   }
 }
