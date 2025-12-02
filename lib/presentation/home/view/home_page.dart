@@ -11,6 +11,8 @@ import 'package:tasks/presentation/home/view_model/home_page_view_model.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
+
+  static const path = '/';
   final title = "재솔's Tasks";
 
   @override

@@ -9,6 +9,7 @@ import 'package:tasks/presentation/todo_detail/view/widgets/todo_detail_view.dar
 class TodoDetailPage extends HookConsumerWidget {
   const TodoDetailPage({super.key, required this.todo});
 
+  static const String path = '/todo';
   final TodoEntity todo;
 
   @override

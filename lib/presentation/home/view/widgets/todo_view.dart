@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tasks/domain/entities/todo_entity.dart';
 import 'package:tasks/presentation/home/view_model/home_page_view_model.dart';
@@ -20,10 +21,7 @@ class TodoView extends ConsumerWidget {
       margin: EdgeInsets.symmetric(vertical: 8),
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TodoDetailPage(todo: todo)),
-        ),
+        onTap: () => context.push(TodoDetailPage.path, extra: todo),
         child: Container(
           color: Colors.transparent, // Spacer 부분에도 터치 가능하게 한다
           child: Row(
