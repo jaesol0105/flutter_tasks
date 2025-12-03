@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tasks/application/enums/action_enums.dart';
+import 'package:tasks/application/extensions/screen_ext.dart';
 import 'package:tasks/application/utils/debouncer.dart';
 import 'package:tasks/domain/entities/todo_entity.dart';
-import 'package:tasks/presentation/home/view_model/home_page_view_model.dart';
+import 'package:tasks/presentation/providers/providers.dart';
 import 'package:tasks/presentation/todo_detail/view/widgets/todo_detail_dialogs.dart';
 import 'package:tasks/presentation/todo_detail/view/widgets/todo_detail_view.dart';
 import 'package:tasks/presentation/todo_detail/view_model/todo_detail_view_model.dart';
@@ -20,8 +21,25 @@ class TodoDetailPage extends HookConsumerWidget {
     final titleController = useTextEditingController(text: todo.title);
     final detailController = useTextEditingController(text: todo.description ?? "");
 
-    // ViewModel 상태 (비즈니스 로직)
     final state = ref.watch(todoDetailViewModelProvider(todo));
+
+    final selectedTodo = ref.watch(selectedTodoProvider); // [반응형 UI - 테블릿/폴드] 현재 선택된 todo
+    final isWideScreen = context.isWideScreen; // [반응형 UI - 테블릿/폴드] 기기 가로 길이
+    final isSplit =
+        isWideScreen && selectedTodo != null; // [반응형 UI - 테블릿/폴드] 넓은 화면일 경우 todo 선택하면 분할 레이아웃
+
+    /// [반응형 UI - 테블릿/폴드] TodoDetailPage 닫기
+    void close() {
+      if (!context.mounted) return;
+
+      if (isSplit) {
+        // 분할 모드일 경우 선택 해제해서 우측 화면만 닫기
+        ref.read(selectedTodoProvider.notifier).clear();
+      } else {
+        // 일반 모드일 경우 POP
+        Navigator.pop(context);
+      }
+    }
 
     /// 변경 여부 체크
     void checkIfEdited() {
@@ -87,7 +105,7 @@ class TodoDetailPage extends HookConsumerWidget {
         await ref
             .read(todoDetailViewModelProvider(todo).notifier)
             .saveTodo(title: titleController.text, description: detailController.text);
-        if (context.mounted) Navigator.pop(context);
+        close();
         // 예외 전파 - 스낵바를 통해 사용자에게 표시
       } catch (e) {
         if (context.mounted) {
@@ -102,7 +120,7 @@ class TodoDetailPage extends HookConsumerWidget {
       if (!result) return;
       try {
         await ref.read(todoDetailViewModelProvider(todo).notifier).deleteTodo();
-        if (context.mounted) Navigator.pop(context);
+        close();
         // 예외 전파 - 스낵바를 통해 사용자에게 표시
       } catch (e) {
         if (context.mounted) {
@@ -113,12 +131,12 @@ class TodoDetailPage extends HookConsumerWidget {
 
     /// 그냥 화면 나가기
     void discardAndPop() {
-      Navigator.pop(context);
+      close();
     }
 
     return PopScope(
-      // 뒤로 가기 처리
-      canPop: !state.isEdited, // 변경 없으면 true, 변경 있으면 false
+      // 뒤로 가기 처리 (분할 화면인 경우 false)
+      canPop: isSplit ? false : !state.isEdited, // 변경 없으면 true, 변경 있으면 false
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         if (titleController.text.isEmpty) {

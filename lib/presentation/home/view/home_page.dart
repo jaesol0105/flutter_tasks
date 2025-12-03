@@ -21,7 +21,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(homePageViewModelProvider);
-    final selectedTodo = ref.watch(selectedTodoProvider); // [반응형 UI - 테블릿/폴드] 넓은 화면에서 현재 선택된 todo
+    final selectedTodo = ref.watch(selectedTodoProvider); // [반응형 UI - 테블릿/폴드] 현재 선택된 todo
     final isWideScreen = context.isWideScreen; // [반응형 UI - 테블릿/폴드] 기기 가로 길이
     final isSplit =
         isWideScreen && selectedTodo != null; // [반응형 UI - 테블릿/폴드] 넓은 화면일 경우 todo 선택하면 분할 레이아웃
@@ -40,18 +40,12 @@ class HomePage extends ConsumerWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        actions: [
-          // [반응형 UI - 테블릿/폴드] 넓은 화면에서 상세 페이지 닫기 버튼
-          if (isWideScreen && selectedTodo != null)
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => ref.read(selectedTodoProvider.notifier).clear(), // 선택 해제
-              tooltip: '닫기',
+      appBar: isSplit
+          ? null
+          : AppBar(
+              // [반응형 UI - 테블릿/폴드] 분할 화면인 경우 공통 앱 바 제거
+              title: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             ),
-        ],
-      ),
 
       body: state.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -61,10 +55,16 @@ class HomePage extends ConsumerWidget {
           if (isSplit) {
             return Row(
               children: [
-                // 좌측 화면 (40%) = 리스트 + FAB + 날씨위젯
+                // 좌측 화면 (40%) = 리스트 + AppBar + FAB + 날씨위젯
                 Expanded(
                   flex: 2,
                   child: Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        title,
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     body: _TodoListSection(todoListState: todoListState, title: title),
                     bottomNavigationBar: const WeatherBottomView(),
                     floatingActionButton: FloatingActionButton(
